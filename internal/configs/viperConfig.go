@@ -1,7 +1,8 @@
 package configs
 
 import (
-	"SEP/internal/utils"
+	"BBBingyan/internal/utils"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )

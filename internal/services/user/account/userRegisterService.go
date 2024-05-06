@@ -2,9 +2,9 @@
 package services
 
 import (
-	"SEP/internal/mappers"
-	"SEP/internal/models/dataModels"
-	"SEP/internal/utils"
+	"BBBingyan/internal/mappers"
+	"BBBingyan/internal/models/dataModels"
+	"BBBingyan/internal/utils"
 	"net/http"
 	"net/mail"
 	"regexp"

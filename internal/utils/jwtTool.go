@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"SEP/internal/models/dataModels"
-	"SEP/internal/models/infoModels"
+	"BBBingyan/internal/models/dataModels"
+	"BBBingyan/internal/models/infoModels"
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type JwtTool struct{}

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"SEP/internal/configs"
-	"SEP/internal/utils"
+	"BBBingyan/internal/configs"
+	"BBBingyan/internal/utils"
+
 	"github.com/labstack/echo/v4"
 )
 

@@ -1,9 +1,10 @@
 package services
 
 import (
-	"SEP/internal/utils"
-	"github.com/labstack/echo/v4"
+	"BBBingyan/internal/utils"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func GetCSRFTokenService(c echo.Context) error {

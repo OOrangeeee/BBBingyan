@@ -1,16 +1,17 @@
 package configs
 
 import (
-	"SEP/internal/models/infoModels"
-	"SEP/internal/utils"
+	"BBBingyan/internal/models/infoModels"
+	"BBBingyan/internal/utils"
+	"os"
+	"path/filepath"
+
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"os"
-	"path/filepath"
 )
 
 func InitMiddleware(e *echo.Echo) {

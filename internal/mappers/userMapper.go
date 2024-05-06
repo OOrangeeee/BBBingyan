@@ -2,8 +2,9 @@
 package mappers
 
 import (
-	"SEP/internal/models/dataModels"
-	"SEP/internal/utils"
+	"BBBingyan/internal/models/dataModels"
+	"BBBingyan/internal/utils"
+
 	"github.com/sirupsen/logrus"
 )
 

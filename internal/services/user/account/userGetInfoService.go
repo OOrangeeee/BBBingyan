@@ -1,9 +1,9 @@
 package services
 
 import (
-	"SEP/internal/mappers"
-	"SEP/internal/models/infoModels"
-	"SEP/internal/utils"
+	"BBBingyan/internal/mappers"
+	"BBBingyan/internal/models/infoModels"
+	"BBBingyan/internal/utils"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

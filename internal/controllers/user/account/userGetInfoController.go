@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	services "SEP/internal/services/user/account"
+	services "BBBingyan/internal/services/user/account"
 
 	"github.com/labstack/echo/v4"
 )

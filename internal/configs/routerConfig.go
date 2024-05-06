@@ -1,8 +1,8 @@
 package configs
 
 import (
-	securityCSRFControllers "SEP/internal/controllers/security/CSRF"
-	useAccountControllers "SEP/internal/controllers/user/account"
+	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
+	useAccountControllers "BBBingyan/internal/controllers/user/account"
 
 	"github.com/labstack/echo/v4"
 )
@@ -23,9 +23,6 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/account", useAccountControllers.UserRegisterController)
 	// 登录
 	e.POST("/users/login", useAccountControllers.UserLoginController)
-	e.POST("/detection", nil)
-	e.POST("/segmentation", nil)
-	e.POST("/track", nil)
 }
 
 func PutRouterConfig(e *echo.Echo) {
@@ -36,5 +33,4 @@ func PutRouterConfig(e *echo.Echo) {
 }
 
 func DeleteRouterConfig(e *echo.Echo) {
-	e.DELETE("/users/records", nil)
 }

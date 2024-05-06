@@ -1,11 +1,12 @@
 package mappers
 
 import (
-	"SEP/internal/models/dataModels"
-	"SEP/internal/utils"
+	"BBBingyan/internal/models/dataModels"
+	"BBBingyan/internal/utils"
+	"time"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type UserEmailMapper struct {

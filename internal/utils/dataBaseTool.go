@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"SEP/internal/models/dataModels"
+	"BBBingyan/internal/models/dataModels"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"

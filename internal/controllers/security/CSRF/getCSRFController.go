@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	services "SEP/internal/services/security/CSRF"
+	services "BBBingyan/internal/services/security/CSRF"
+
 	"github.com/labstack/echo/v4"
 )
 

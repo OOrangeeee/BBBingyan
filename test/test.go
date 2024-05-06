@@ -1,11 +1,12 @@
 package main
 
 import (
-	"SEP/internal/configs"
-	"SEP/internal/utils"
+	"BBBingyan/internal/configs"
+	"BBBingyan/internal/utils"
+	"strings"
+
 	"github.com/spf13/viper"
 	"gopkg.in/gomail.v2"
-	"strings"
 )
 
 func SendMail(mailTo []string, subject string, body string) error {
