@@ -45,4 +45,12 @@ func InitDB() {
 			"error_message": "创建用户邮箱表失败",
 		}).Panic("创建用户邮箱表失败")
 	}
+	DB.Model(&dataModels.Passage{})
+	err = DB.AutoMigrate(&dataModels.Passage{})
+	if err != nil {
+		Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "创建文章表失败",
+		}).Panic("创建文章表失败")
+	}
 }
