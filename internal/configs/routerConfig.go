@@ -1,6 +1,7 @@
 package configs
 
 import (
+	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
 
@@ -10,12 +11,12 @@ import (
 func GetRouterConfig(e *echo.Echo) {
 	// 获取用户信息
 	e.GET("/users/account", useAccountControllers.UserGetInfoController)
-	e.GET("/users/records-all/:userid", nil)
-	e.GET("/users/records/:recordsid", nil)
 	// 获取CSRF Token
 	e.GET("/csrf-token", securityCSRFControllers.GetCSRFTokenController)
 	// 激活
 	e.GET("/users/account/activation/:activationCode", useAccountControllers.UserConfirmController)
+	// 获得文章标签
+	e.GET("/passage/tags", passageControllers.GetPassageTagsController)
 }
 
 func PostRouterConfig(e *echo.Echo) {
@@ -23,6 +24,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/account", useAccountControllers.UserRegisterController)
 	// 登录
 	e.POST("/users/login", useAccountControllers.UserLoginController)
+	// 发布文章
+	e.POST("/passage", passageControllers.SendPassageController)
 }
 
 func PutRouterConfig(e *echo.Echo) {
