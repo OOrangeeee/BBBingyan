@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func GetPassageTags(c echo.Context) error {
+func GetPassageTagsService(c echo.Context) error {
 	tagString := viper.GetString("passage.tags")
 	tags := strings.Split(tagString, ",")
 	tag := infoModels.Tags(tags)

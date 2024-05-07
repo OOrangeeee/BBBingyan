@@ -17,6 +17,18 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/users/account/activation/:activationCode", useAccountControllers.UserConfirmController)
 	// 获得文章标签
 	e.GET("/passage/tags", passageControllers.GetPassageTagsController)
+	// 根据文章Id获取文章
+	e.GET("/passage/:id", passageControllers.GetPassageByIDController)
+	// 根据文章标题获取文章
+	e.GET("/passages/title/:passage-title", passageControllers.GetPassagesByPassageTitleController)
+	// 根据文章作者用户名获取文章
+	e.GET("/passages/author/username/:passage-author-username", passageControllers.GetPassagesByPassageAuthorUserNameController)
+	// 根据文章作者昵称获取文章
+	e.GET("/passages/author/nickname/:passage-author-nickname", passageControllers.GetPassagesByPassageAuthorNickNameController)
+	// 根据文章作者Id获取文章
+	e.GET("/passages/author/id", passageControllers.GetPassagesByPassageAuthorIdController)
+	// 根据文章标签获取文章
+	e.GET("/passages/tag/:passage-tag", passageControllers.GetPassagesByPassageTagController)
 }
 
 func PostRouterConfig(e *echo.Echo) {

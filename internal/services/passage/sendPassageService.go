@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func SendPassage(paramsMap map[string]string, c echo.Context) error {
+func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 	userMapper := mappers.UserMapper{}
 	passageTatle := paramsMap["passageTitle"]
 	passageContent := paramsMap["passageContent"]

@@ -7,13 +7,13 @@ import (
 )
 
 func SendPassageController(c echo.Context) error {
-	passageTitle := c.FormValue("passageTitle")
-	passageContent := c.FormValue("passageContent")
-	passageTag := c.FormValue("passageTag")
+	passageTitle := c.FormValue("passage-title")
+	passageContent := c.FormValue("passage-content")
+	passageTag := c.FormValue("passage-tag")
 	mapParams := map[string]string{
 		"passageTitle":   passageTitle,
 		"passageContent": passageContent,
 		"passageTag":     passageTag,
 	}
-	return services.SendPassage(mapParams, c)
+	return services.SendPassageService(mapParams, c)
 }

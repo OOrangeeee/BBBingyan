@@ -7,5 +7,5 @@ import (
 )
 
 func GetPassageTagsController(c echo.Context) error {
-	return services.GetPassageTags(c)
+	return services.GetPassageTagsService(c)
 }
