@@ -39,7 +39,7 @@ func (uem *UserEmailMapper) GetUserEmailsByUserEmail(userEmail string) ([]*dataM
 	return userEmails, result.Error
 }
 
-func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
+func (uem *UserEmailMapper) IsUserRegisterEmailSendInTimeRange(email string) bool {
 	timeRange := viper.GetInt("email.emailOfRegister.timeRange")
 	beforeTime := time.Now().Add(-time.Duration(timeRange) * time.Minute)
 	var userEmail *dataModels.UserEmail
@@ -50,7 +50,24 @@ func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}
-	if userEmail.EmailLastSent.After(beforeTime) {
+	if userEmail.EmailLastSentOfRegister.After(beforeTime) {
+		return true
+	}
+	return false
+}
+
+func (uem *UserEmailMapper) IsUserLoginEmailSendInTimeRange(email string) bool {
+	timeRange := viper.GetInt("email.emailOfLogin.timeRange")
+	beforeTime := time.Now().Add(-time.Duration(timeRange) * time.Minute)
+	var userEmail *dataModels.UserEmail
+	err := utils.DB.First(&userEmail, "email=?", email)
+	if err.Error != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err.Error,
+			"error_message": "查询用户邮箱失败",
+		}).Error("查询用户邮箱失败")
+	}
+	if userEmail.EmailLastSentOfLogin.After(beforeTime) {
 		return true
 	}
 	return false

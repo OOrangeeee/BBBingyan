@@ -136,7 +136,7 @@ func RegisterUserService(paramMap map[string]string, c echo.Context) error {
 	}
 	// 发送激活邮件
 	// 检查邮件发送时间间隔
-	if userEmailMapper.IsUserEmailSendInTimeRange(userEmail) {
+	if userEmailMapper.IsUserRegisterEmailSendInTimeRange(userEmail) {
 		utils.Log.WithField("error_message", "邮件发送过于频繁").Error("邮件发送过于频繁")
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"error_message": "邮件发送过于频繁，请等待五分钟再试",
@@ -180,7 +180,7 @@ func RegisterUserService(paramMap map[string]string, c echo.Context) error {
 		})
 	}
 	nowUserEmail := nowUserEmails[0]
-	nowUserEmail.EmailLastSent = time.Now()
+	nowUserEmail.EmailLastSentOfRegister = time.Now()
 	err = userEmailMapper.UpdateUserEmail(nowUserEmail)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{

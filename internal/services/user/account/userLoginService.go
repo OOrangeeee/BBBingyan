@@ -53,6 +53,14 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 		})
 	}
 
+	userEmailMapper := mappers.UserEmailMapper{}
+	if userEmailMapper.IsUserLoginEmailSendInTimeRange(user.UserEmail) {
+		utils.Log.WithField("error_message", "邮件发送过于频繁").Error("邮件发送过于频繁")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "邮件发送过于频繁，请等待两分钟再试",
+		})
+	}
+
 	confirmTokenTool := utils.ConfirmTokenTool{}
 	loginToken := confirmTokenTool.GenerateConfirmToken()
 	user.UserLoginToken = loginToken
@@ -83,6 +91,36 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 		}).Error("邮件发送失败")
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "邮件发送失败",
+		})
+	}
+
+	nowUserEmails, err := userEmailMapper.GetUserEmailsByUserEmail(user.UserEmail)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "查询用户邮箱失败",
+		}).Error("查询用户邮箱失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "查询用户邮箱失败",
+		})
+	}
+	// 邮箱不存在在报错
+	if len(nowUserEmails) == 0 {
+		utils.Log.WithField("error_message", "不存在当前邮箱").Error("不存在当前邮箱")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "不存在当前邮箱",
+		})
+	}
+	nowUserEmail := nowUserEmails[0]
+	nowUserEmail.EmailLastSentOfLogin = time.Now()
+	err = userEmailMapper.UpdateUserEmail(nowUserEmail)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新用户邮箱失败",
+		}).Error("更新用户邮箱失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新用户邮箱失败",
 		})
 	}
 	csrfTool := utils.CSRFTool{}
@@ -135,6 +173,11 @@ func UserLoginConfirmService(paramMap map[string]string, c echo.Context) error {
 			"error_message": "验证码错误",
 		})
 	}
+	userEmailMapper := mappers.UserEmailMapper{}
+	if !userEmailMapper.IsUserLoginEmailSendInTimeRange(user.UserEmail) {
+		utils.Log.WithField("error_message", "验证码过期").Error("验证码过期")
+	}
+
 	jwtTool := utils.JwtTool{}
 	token, err := jwtTool.GenerateLoginToken(user)
 	if err != nil {
