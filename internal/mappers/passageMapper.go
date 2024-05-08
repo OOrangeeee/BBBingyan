@@ -29,7 +29,7 @@ func (pm *PassageMapper) GetAllPassages() ([]*dataModels.Passage, error) {
 	return passages, result.Error
 }
 
-func (pm *PassageMapper) GetPassageByID(passageID uint) ([]*dataModels.Passage, error) {
+func (pm *PassageMapper) GetPassagesByID(passageID uint) ([]*dataModels.Passage, error) {
 	var passages []*dataModels.Passage
 	result := utils.DB.Find(&passages, "ID=?", passageID)
 	return passages, result.Error

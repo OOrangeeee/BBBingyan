@@ -7,7 +7,7 @@ import (
 )
 
 func GetPassageByIDController(c echo.Context) error {
-	id := c.Param("id")
+	id := c.QueryParam("passage-id")
 	mapParams := map[string]string{
 		"id": id,
 	}

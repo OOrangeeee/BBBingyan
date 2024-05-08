@@ -18,7 +18,7 @@ func GetRouterConfig(e *echo.Echo) {
 	// 获得文章标签
 	e.GET("/passage/tags", passageControllers.GetPassageTagsController)
 	// 根据文章Id获取文章
-	e.GET("/passage/:id", passageControllers.GetPassageByIDController)
+	e.GET("/passage", passageControllers.GetPassageByIDController)
 	// 根据文章标题获取文章
 	e.GET("/passages/title", passageControllers.GetPassagesByPassageTitleController)
 	// 根据文章作者用户名获取文章
@@ -29,6 +29,14 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/passages/author/id", passageControllers.GetPassagesByPassageAuthorIdController)
 	// 根据文章标签获取文章
 	e.GET("/passages/tag", passageControllers.GetPassagesByPassageTagController)
+	// 获得最新文章
+	e.GET("/passages/last", passageControllers.GetLastPassagesController)
+	// 根据Id获得评论
+	e.GET("/comment", commentControllers.GetCommentByIdController)
+	// 根据评论者Id获得评论
+	e.GET("/comment/from-user", commentControllers.GetCommentsByFromUserIdController)
+	// 根据文章Id获得评论
+	e.GET("/comment/to-passage", commentControllers.GetCommentsByToPassageIdController)
 }
 
 func PostRouterConfig(e *echo.Echo) {

@@ -36,7 +36,7 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	idUint := uint(idUint64)
-	passages, err := passageMapper.GetPassageByID(idUint)
+	passages, err := passageMapper.GetPassagesByID(idUint)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
@@ -63,15 +63,6 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 		PassageAuthorNickName: passage.PassageAuthorNickName,
 		PassageTag:            passage.PassageTag,
 		PassageTime:           passage.PassageTime,
-	}
-	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"error":         err,
-			"error_message": "获取文章失败",
-		}).Error("获取文章失败")
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "获取文章失败",
-		})
 	}
 	csrfTool := utils.CSRFTool{}
 	getCSRF := csrfTool.SetCSRFToken(c)

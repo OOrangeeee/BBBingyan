@@ -33,6 +33,7 @@ func GetUserInfoService(c echo.Context) error {
 	}
 	user := users[0]
 	userInfo := infoModels.User{
+		UserId:       user.ID,
 		UserName:     user.UserName,
 		UserEmail:    user.UserEmail,
 		UserNickName: user.UserNickName,

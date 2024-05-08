@@ -34,7 +34,7 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	toPassageIdUint := uint(toPassageIdUint64)
-	toPassage, err := passageMapper.GetPassageByID(toPassageIdUint)
+	toPassage, err := passageMapper.GetPassagesByID(toPassageIdUint)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
