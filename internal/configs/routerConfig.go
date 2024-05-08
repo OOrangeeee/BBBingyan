@@ -5,6 +5,7 @@ import (
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -44,6 +45,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/account", useAccountControllers.UserRegisterController)
 	// 登录
 	e.POST("/users/login", useAccountControllers.UserLoginController)
+	// 验证用户登录
+	e.POST("/users/login/confirm", useAccountControllers.UserLoginConfirmController)
 	// 发布文章
 	e.POST("/passage", passageControllers.SendPassageController)
 	// 发布评论

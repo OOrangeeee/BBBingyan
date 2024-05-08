@@ -73,6 +73,12 @@ func (um *UserMapper) GetUsersByUserActivationCode(userActivationCode string) ([
 	return users, result.Error
 }
 
+func (um *UserMapper) GetUsersByUserLoginToken(userLoginToken string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	result := utils.DB.Find(&users, "user_login_token=?", userLoginToken)
+	return users, result.Error
+}
+
 func (um *UserMapper) IfUserExist(userName string) bool {
 	var users []*dataModels.User
 	_ = utils.DB.Find(&users, "user_name=?", userName)

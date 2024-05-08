@@ -12,3 +12,9 @@ func UserLoginController(c echo.Context) error {
 	paramMap["password"] = c.FormValue("user-password")
 	return services.UserLoginService(paramMap, c)
 }
+
+func UserLoginConfirmController(c echo.Context) error {
+	paramMap := make(map[string]string)
+	paramMap["confirmToken"] = c.FormValue("confirm-token")
+	return services.UserLoginConfirmService(paramMap, c)
+}

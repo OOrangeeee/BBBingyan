@@ -35,7 +35,7 @@ func (uem *UserEmailMapper) GetAllUserEmails() ([]*dataModels.UserEmail, error) 
 
 func (uem *UserEmailMapper) GetUserEmailsByUserEmail(userEmail string) ([]*dataModels.UserEmail, error) {
 	var userEmails []*dataModels.UserEmail
-	result := utils.DB.Find(&userEmails, "Email=?", userEmail)
+	result := utils.DB.Find(&userEmails, "email=?", userEmail)
 	return userEmails, result.Error
 }
 
@@ -43,7 +43,7 @@ func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
 	timeRange := viper.GetInt("email.emailOfRegister.timeRange")
 	beforeTime := time.Now().Add(-time.Duration(timeRange) * time.Minute)
 	var userEmail *dataModels.UserEmail
-	err := utils.DB.First(&userEmail, "Email=?", email)
+	err := utils.DB.First(&userEmail, "email=?", email)
 	if err.Error != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err.Error,
@@ -58,7 +58,7 @@ func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
 
 func (uem *UserEmailMapper) IsExistUserEmail(email string) bool {
 	var userEmails []*dataModels.UserEmail
-	err := utils.DB.Find(&userEmails, "Email=?", email)
+	err := utils.DB.Find(&userEmails, "email=?", email)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err.Error,
