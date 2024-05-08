@@ -15,7 +15,7 @@ func GetPassageByIDController(c echo.Context) error {
 }
 
 func GetPassagesByPassageTitleController(c echo.Context) error {
-	title := c.Param("passage-title")
+	title := c.QueryParam("passage-title")
 	mapParams := map[string]string{
 		"passageTitle": title,
 	}
@@ -23,7 +23,7 @@ func GetPassagesByPassageTitleController(c echo.Context) error {
 }
 
 func GetPassagesByPassageAuthorUserNameController(c echo.Context) error {
-	passageAuthorUserName := c.Param("passage-author-username")
+	passageAuthorUserName := c.QueryParam("passage-author-username")
 	mapParams := map[string]string{
 		"passageAuthorUserName": passageAuthorUserName,
 	}
@@ -31,7 +31,7 @@ func GetPassagesByPassageAuthorUserNameController(c echo.Context) error {
 }
 
 func GetPassagesByPassageAuthorNickNameController(c echo.Context) error {
-	passageAuthorNickName := c.Param("passage-author-nickname")
+	passageAuthorNickName := c.QueryParam("passage-author-nickname")
 	mapParams := map[string]string{
 		"passageAuthorNickName": passageAuthorNickName,
 	}
@@ -43,7 +43,7 @@ func GetPassagesByPassageAuthorIdController(c echo.Context) error {
 }
 
 func GetPassagesByPassageTagController(c echo.Context) error {
-	tag := c.Param("passage-tag")
+	tag := c.QueryParam("passage-tag")
 	mapParams := map[string]string{
 		"passageTag": tag,
 	}

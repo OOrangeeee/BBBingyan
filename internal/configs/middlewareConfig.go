@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"BBBingyan/internal/models/infoModels"
 	"BBBingyan/internal/utils"
 	"os"
 	"path/filepath"
@@ -60,14 +59,30 @@ func InitMiddleware(e *echo.Echo) {
 		TokenLookup: "header:Authorization:Bearer ",
 		SuccessHandler: func(c echo.Context) {
 			user := c.Get("user").(*jwt.Token)
-			claims := user.Claims.(*infoModels.JwtCustomClaim)
+			claims, ok := user.Claims.(jwt.MapClaims)
+			if !ok {
+				c.Logger().Error("无法断言JWT claims为MapClaims类型")
+				return
+			}
+			userIdTmp, ok := claims["UserId"].(float64)
+			userId := uint(userIdTmp)
+			if !ok {
+				c.Logger().Error("用户ID claims类型断言错误")
+				return
+			}
+			isAdmin, ok := claims["IsAdmin"].(bool)
+			if !ok {
+				c.Logger().Error("管理员状态claims类型断言错误")
+				return
+			}
 			utils.Log.WithFields(logrus.Fields{
-				"userId":          claims.UserId,
-				"isAdmin":         claims.IsAdmin,
+				"userId":          userId,
+				"isAdmin":         isAdmin,
 				"success_message": "用户登录成功",
 			}).Info("用户登录成功")
-			c.Set("userId", claims.UserId)
-			c.Set("isAdmin", claims.IsAdmin)
+
+			c.Set("userId", userId)
+			c.Set("isAdmin", isAdmin)
 		},
 	}))
 }

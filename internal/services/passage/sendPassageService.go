@@ -6,6 +6,7 @@ import (
 	"BBBingyan/internal/utils"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -63,6 +64,7 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		PassageAuthorNickName: userNow.UserNickName,
 		PassageAuthorId:       userNow.ID,
 		PassageTag:            passageTag,
+		PassageTime:           time.Now(),
 	}
 	passageMapper := mappers.PassageMapper{}
 	err = passageMapper.AddNewPassage(passage)
@@ -73,6 +75,13 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		}).Error("发布文章失败")
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "发布文章失败",
+		})
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{

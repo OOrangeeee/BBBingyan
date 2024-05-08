@@ -55,6 +55,13 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "获取文章失败",
 		})
 	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfo":     passageInfo,
 		"success_message": "获取文章成功",
@@ -82,6 +89,14 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	for _, passage := range passages {
 		passageInfo := infoModels.Passage{
@@ -94,6 +109,13 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -122,6 +144,14 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	for _, passage := range passages {
 		passageInfo := infoModels.Passage{
@@ -134,6 +164,13 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -162,6 +199,14 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	for _, passage := range passages {
 		passageInfo := infoModels.Passage{
@@ -174,6 +219,13 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -194,6 +246,14 @@ func GetPassagesByPassageAuthorIdService(c echo.Context) error {
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	for _, passage := range passages {
 		passageInfo := infoModels.Passage{
@@ -206,6 +266,13 @@ func GetPassagesByPassageAuthorIdService(c echo.Context) error {
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -251,6 +318,14 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	for _, passage := range passages {
 		passageInfo := infoModels.Passage{
@@ -263,6 +338,13 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -283,6 +365,14 @@ func GetLastPassagesService(c echo.Context) error {
 			"error_message": "获取文章失败",
 		})
 	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
 	var passageInfos []infoModels.Passage
 	sort.Slice(passages, func(i, j int) bool {
 		return passages[i].PassageTime.After(passages[j].PassageTime)
@@ -301,6 +391,13 @@ func GetLastPassagesService(c echo.Context) error {
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
