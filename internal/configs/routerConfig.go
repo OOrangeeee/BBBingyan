@@ -1,10 +1,10 @@
 package configs
 
 import (
+	commentControllers "BBBingyan/internal/controllers/comment"
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -38,6 +38,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/login", useAccountControllers.UserLoginController)
 	// 发布文章
 	e.POST("/passage", passageControllers.SendPassageController)
+	// 发布评论
+	e.POST("/comment", commentControllers.SendCommentController)
 }
 
 func PutRouterConfig(e *echo.Echo) {

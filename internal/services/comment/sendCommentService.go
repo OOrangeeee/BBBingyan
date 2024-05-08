@@ -12,8 +12,8 @@ import (
 )
 
 func SendCommentService(paramsMap map[string]string, c echo.Context) error {
-	userMapper := mappers.UserMapper{}
 	passageMapper := mappers.PassageMapper{}
+	commentMapper := mappers.CommentMapper{}
 	commentContent := paramsMap["commentContent"]
 	toPassageId := paramsMap["toPassageId"]
 	if commentContent == "" || toPassageId == "" {
@@ -23,23 +23,6 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	userId := c.Get("userId").(uint)
-	userTemp, err := userMapper.GetUsersByUserId(userId)
-	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"error":         err,
-			"error_message": "获取用户失败",
-		}).Error("获取用户失败")
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "获取用户失败",
-		})
-	}
-	if len(userTemp) == 0 {
-		utils.Log.WithField("error_message", "用户不存在").Error("用户不存在")
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error_message": "用户不存在",
-		})
-	}
-	userNow := userTemp[0]
 	toPassageIdUint64, err := strconv.ParseUint(toPassageId, 10, 64)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -70,9 +53,9 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 	comment := &dataModels.Comment{
 		CommentContent: commentContent,
 		FromUserId:     userId,
-		ToPassageId:    toPassage[0].ID,
+		ToPassageId:    toPassageIdUint,
 	}
-	err = utils.DB.Create(comment).Error
+	err = commentMapper.AddNewComment(comment)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
@@ -80,6 +63,13 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 		}).Error("评论失败")
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "评论失败",
+		})
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
