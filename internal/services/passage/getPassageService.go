@@ -36,7 +36,25 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	idUint := uint(idUint64)
-	passage, err := passageMapper.GetPassageByID(idUint)
+	passages, err := passageMapper.GetPassageByID(idUint)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取文章失败",
+		}).Error("获取文章失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取文章失败",
+		})
+	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
+	passage := passages[0]
 	passageInfo := infoModels.Passage{
 		ID:                    passage.ID,
 		PassageTitle:          passage.PassageTitle,

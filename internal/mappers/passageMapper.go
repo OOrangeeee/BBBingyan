@@ -29,10 +29,10 @@ func (pm *PassageMapper) GetAllPassages() ([]*dataModels.Passage, error) {
 	return passages, result.Error
 }
 
-func (pm *PassageMapper) GetPassageByID(passageID uint) (*dataModels.Passage, error) {
-	passage := &dataModels.Passage{}
-	result := utils.DB.First(passage, passageID)
-	return passage, result.Error
+func (pm *PassageMapper) GetPassageByID(passageID uint) ([]*dataModels.Passage, error) {
+	var passages []*dataModels.Passage
+	result := utils.DB.Find(&passages, "ID=?", passageID)
+	return passages, result.Error
 }
 
 func (pm *PassageMapper) GetPassagesByPassageTitle(passageTitle string) ([]*dataModels.Passage, error) {
