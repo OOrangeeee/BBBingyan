@@ -75,10 +75,10 @@ func (uem *UserEmailMapper) IsUserLoginEmailSendInTimeRange(email string) bool {
 
 func (uem *UserEmailMapper) IsExistUserEmail(email string) bool {
 	var userEmails []*dataModels.UserEmail
-	err := utils.DB.Find(&userEmails, "email=?", email)
-	if err != nil {
+	result := utils.DB.Find(&userEmails, "email=?", email)
+	if result.Error != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"error":         err.Error,
+			"error":         result.Error,
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}

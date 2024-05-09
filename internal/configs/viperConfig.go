@@ -16,6 +16,6 @@ func InitViper() {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
 			"error_message": "配置文件读取失败",
-		}).Panic("Failed to read config file")
+		}).Panic("配置文件读取失败")
 	}
 }
