@@ -1,6 +1,6 @@
 services:
   app:
-    image: bbbingyan:v1.8
+    image: bbbingyan:v2.0
     ports:
       - "714:714"
     depends_on:
