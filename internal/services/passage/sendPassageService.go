@@ -4,13 +4,11 @@ import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"net/http"
+	"strings"
 )
 
 func SendPassageService(paramsMap map[string]string, c echo.Context) error {
@@ -57,6 +55,17 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	userNow := userTemp[0]
+	timeTool := utils.TimeTool{}
+	passageTime, err := timeTool.GetCurrentTime()
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取当前时间失败",
+		})
+	}
 	passage := &dataModels.Passage{
 		PassageTitle:          passageTatle,
 		PassageContent:        passageContent,
@@ -64,7 +73,7 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		PassageAuthorNickName: userNow.UserNickName,
 		PassageAuthorId:       userNow.ID,
 		PassageTag:            passageTag,
-		PassageTime:           time.Now(),
+		PassageTime:           passageTime,
 	}
 	passageMapper := mappers.PassageMapper{}
 	err = passageMapper.AddNewPassage(passage)

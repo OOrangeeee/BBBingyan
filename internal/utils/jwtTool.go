@@ -2,6 +2,7 @@ package utils
 
 import (
 	"BBBingyan/internal/models/dataModels"
+	"github.com/sirupsen/logrus"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,7 +12,16 @@ import (
 type JwtTool struct{}
 
 func (j *JwtTool) GenerateLoginToken(user *dataModels.User) (string, error) {
-	expirationTime := jwt.NewNumericDate(time.Now().Add(time.Hour * 24))
+	timeTool := TimeTool{}
+	timeNow, err := timeTool.GetCurrentTime()
+	if err != nil {
+		Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return "", err
+	}
+	expirationTime := jwt.NewNumericDate(timeNow.Add(time.Hour * 24))
 	claims := jwt.MapClaims{
 		"UserId":  user.ID,
 		"IsAdmin": user.UserIsAdmin,

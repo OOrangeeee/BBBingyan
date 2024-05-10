@@ -5,15 +5,13 @@ import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
+	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"net/http"
 	"net/mail"
 	"regexp"
 	"strings"
-	"time"
-
-	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 func RegisterUserService(paramMap map[string]string, c echo.Context) error {
@@ -180,7 +178,18 @@ func RegisterUserService(paramMap map[string]string, c echo.Context) error {
 		})
 	}
 	nowUserEmail := nowUserEmails[0]
-	nowUserEmail.EmailLastSentOfRegister = time.Now()
+	timeTool := utils.TimeTool{}
+	timeNow, err := timeTool.GetCurrentTime()
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取当前时间失败",
+		})
+	}
+	nowUserEmail.EmailLastSentOfRegister = timeNow
 	err = userEmailMapper.UpdateUserEmail(nowUserEmail)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{

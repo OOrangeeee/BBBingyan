@@ -14,5 +14,7 @@ type Passage struct {
 	PassageAuthorNickName string
 	PassageAuthorId       uint
 	PassageTag            string
+	PassageBeLikedCount   int
+	PassageCommentCount   int
 	PassageTime           time.Time `gorm:"default:null"`
 }

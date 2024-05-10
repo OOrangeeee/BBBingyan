@@ -2,12 +2,28 @@ package infoModels
 
 import "time"
 
-type Passage struct {
-	ID                    uint   `json:"id"`
-	PassageTitle          string `json:"passage_title"`
-	PassageContent        string `json:"passage_content"`
-	PassageAuthorUserName string `json:"passage_author_user_name"`
-	PassageAuthorNickName string `json:"passage_author_nick_name"`
-	PassageTag            string `json:"passage_tag"`
-	PassageTime           time.Time
+type PassageDetail struct {
+	ID                    uint      `json:"id"`
+	PassageTitle          string    `json:"passageTitle"`
+	PassageContent        string    `json:"passageContent"`
+	PassageAuthorUserName string    `json:"passageAuthorUserName"`
+	PassageAuthorNickName string    `json:"passageAuthorNickName"`
+	PassageAuthorId       uint      `json:"passageAuthorId"`
+	PassageTag            string    `json:"passageTag"`
+	PassageBeLikedCount   int       `json:"passageBeLikedCount"`
+	PassageCommentCount   int       `json:"passageCommentCount"`
+	PassageTime           time.Time `json:"passageSendTime"`
+}
+
+type PassageBrief struct {
+	ID           uint   `json:"id"`
+	PassageTitle string `json:"passageTitle"`
+	// no PassageContent
+	PassageAuthorUserName string `json:"passageAuthorUserName"`
+	PassageAuthorNickName string `json:"passageAuthorNickName"`
+	// no PassageAuthorId
+	PassageTag          string    `json:"passageTag"`
+	PassageBeLikedCount int       `json:"passageBeLikedCount"`
+	PassageCommentCount int       `json:"passageCommentCount"`
+	PassageTime         time.Time `json:"passageSendTime"`
 }

@@ -3,13 +3,11 @@ package services
 import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/utils"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"net/http"
+	"strings"
 )
 
 func UserLoginService(params map[string]string, c echo.Context) error {
@@ -75,6 +73,18 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 		})
 	}
 
+	timeTool := utils.TimeTool{}
+	timeNow, err := timeTool.GetCurrentTime()
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取当前时间失败",
+		})
+	}
+
 	mileTool := utils.MileTool{}
 	emailBody := viper.GetString("email.emailOfLogin.body")
 	emailBody = strings.Replace(emailBody, "{验证码}", loginToken, -1)
@@ -82,7 +92,7 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 	emailBody = strings.Replace(emailBody, "{联系电话}", viper.GetString("info.contactPhone"), -1)
 	emailBody = strings.Replace(emailBody, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
 	emailBody = strings.Replace(emailBody, "{官方网站}", viper.GetString("info.webSite"), -1)
-	emailBody = strings.Replace(emailBody, "{登录时间}", time.Now().Format("2006-01-02 15:04:05"), -1)
+	emailBody = strings.Replace(emailBody, "{登录时间}", timeNow.Format("2006-01-02 15:04:05"), -1)
 	err = mileTool.SendMail([]string{user.UserEmail}, viper.GetString("email.emailOfLogin.subject"), emailBody, viper.GetString("email.emailFromNickname"))
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -112,7 +122,17 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 		})
 	}
 	nowUserEmail := nowUserEmails[0]
-	nowUserEmail.EmailLastSentOfLogin = time.Now()
+	timeNow, err = timeTool.GetCurrentTime()
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取当前时间失败",
+		})
+	}
+	nowUserEmail.EmailLastSentOfLogin = timeNow
 	err = userEmailMapper.UpdateUserEmail(nowUserEmail)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
