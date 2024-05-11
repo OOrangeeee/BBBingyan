@@ -8,6 +8,6 @@ type User struct {
 	UserFollowCount  int    `json:"userFollowCount"`
 	UserFansCount    int    `json:"userFansCount"`
 	UserPassageCount int    `json:"userPassageCount"`
-	UserLikeCount    int    `json:"userLikeCount"`
+	UserLikeCount    int    `json:"userLikeCount"` // 用户点赞数
 	UserIsAdmin      bool   `json:"userIsAdmin"`
 }

@@ -114,3 +114,16 @@ func (um *UserMapper) IfUserEmailExist(userEmail string) bool {
 	}
 	return false
 }
+
+func (um *UserMapper) SearchUsersByUserName(userName string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	// 根据粉丝数降序排序
+	result := utils.DB.Order("user_fans_count desc").Find(&users, "user_name LIKE ?", "%"+userName+"%")
+	return users, result.Error
+}
+
+func (um *UserMapper) SearchUsersByUserNickName(userNickName string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	result := utils.DB.Order("user_fans_count desc").Find(&users, "user_nick_name LIKE ?", "%"+userNickName+"%")
+	return users, result.Error
+}

@@ -11,7 +11,13 @@ import (
 
 func GetRouterConfig(e *echo.Echo) {
 	// 获取用户信息
-	e.GET("/users/account", useAccountControllers.UserGetInfoController)
+	e.GET("/users/account", useAccountControllers.GetUserInfoController)
+	// 根据用户Id获取用户信息
+	e.GET("/users/account/:userId", useAccountControllers.GetUserInfoByIdController)
+	// 根据用户名搜索用户
+	e.GET("/users/account/search/username", useAccountControllers.SearchUserByUserNameController)
+	// 根据用户昵称搜索用户
+	e.GET("/users/account/search/nickname", useAccountControllers.SearchUserByUserNickNameController)
 	// 获取CSRF Token
 	e.GET("/csrf-token", securityCSRFControllers.GetCSRFTokenController)
 	// 激活
