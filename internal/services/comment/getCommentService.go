@@ -4,10 +4,11 @@ import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/models/infoModels"
 	"BBBingyan/internal/utils"
-	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 )
 
 func GetCommentByIdService(paramsMap map[string]string, c echo.Context) error {
@@ -101,13 +102,14 @@ func GetCommentByIdService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	passage := passages[0]
-	passageInfo := infoModels.Passage{
+	passageInfo := infoModels.PassageBrief{
 		ID:                    passage.ID,
 		PassageTitle:          passage.PassageTitle,
-		PassageContent:        passage.PassageContent,
 		PassageAuthorUserName: passage.PassageAuthorUserName,
 		PassageAuthorNickName: passage.PassageAuthorNickName,
 		PassageTag:            passage.PassageTag,
+		PassageBeLikedCount:   passage.PassageBeLikedCount,
+		PassageCommentCount:   passage.PassageCommentCount,
 		PassageTime:           passage.PassageTime,
 	}
 	commentInfo := infoModels.Comment{
@@ -219,13 +221,14 @@ func GetCommentsByFromUserIdService(paramsMap map[string]string, c echo.Context)
 			})
 		}
 		passage := passages[0]
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageBrief{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		commentInfo := infoModels.Comment{
@@ -310,13 +313,14 @@ func GetCommentsByToPassageIdService(paramsMap map[string]string, c echo.Context
 		})
 	}
 	passage := passages[0]
-	passageInfo := infoModels.Passage{
+	passageInfo := infoModels.PassageBrief{
 		ID:                    passage.ID,
 		PassageTitle:          passage.PassageTitle,
-		PassageContent:        passage.PassageContent,
 		PassageAuthorUserName: passage.PassageAuthorUserName,
 		PassageAuthorNickName: passage.PassageAuthorNickName,
 		PassageTag:            passage.PassageTag,
+		PassageBeLikedCount:   passage.PassageBeLikedCount,
+		PassageCommentCount:   passage.PassageCommentCount,
 		PassageTime:           passage.PassageTime,
 	}
 	var commentInfos []infoModels.Comment

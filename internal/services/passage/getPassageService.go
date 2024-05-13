@@ -55,13 +55,16 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	passage := passages[0]
-	passageInfo := infoModels.Passage{
+	passageInfo := infoModels.PassageDetail{
 		ID:                    passage.ID,
 		PassageTitle:          passage.PassageTitle,
 		PassageContent:        passage.PassageContent,
 		PassageAuthorUserName: passage.PassageAuthorUserName,
 		PassageAuthorNickName: passage.PassageAuthorNickName,
+		PassageAuthorId:       passage.PassageAuthorId,
 		PassageTag:            passage.PassageTag,
+		PassageBeLikedCount:   passage.PassageBeLikedCount,
+		PassageCommentCount:   passage.PassageCommentCount,
 		PassageTime:           passage.PassageTime,
 	}
 	csrfTool := utils.CSRFTool{}
@@ -106,15 +109,18 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
@@ -161,15 +167,18 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
@@ -216,15 +225,18 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
@@ -263,15 +275,18 @@ func GetPassagesByPassageAuthorIdService(c echo.Context) error {
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
@@ -335,15 +350,18 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
@@ -382,7 +400,7 @@ func GetLastPassagesService(c echo.Context) error {
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.Passage
+	var passageInfos []infoModels.PassageDetail
 	sort.Slice(passages, func(i, j int) bool {
 		return passages[i].PassageTime.After(passages[j].PassageTime)
 	})
@@ -390,13 +408,16 @@ func GetLastPassagesService(c echo.Context) error {
 		passages = passages[:5]
 	}
 	for _, passage := range passages {
-		passageInfo := infoModels.Passage{
+		passageInfo := infoModels.PassageDetail{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
 			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
+			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
+			PassageBeLikedCount:   passage.PassageBeLikedCount,
+			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageInfo)
