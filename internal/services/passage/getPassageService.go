@@ -91,6 +91,33 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			"error_message": "文章标题为空",
 		})
 	}
+	pageSize := paramsMap["pageSize"]
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
+		})
+	}
 	passages, err := passageMapper.GetPassagesByPassageTitle(passageTitle)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -109,19 +136,42 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
-	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
-			ID:                    passage.ID,
-			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
-			PassageAuthorUserName: passage.PassageAuthorUserName,
-			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
-			PassageTag:            passage.PassageTag,
-			PassageBeLikedCount:   passage.PassageBeLikedCount,
-			PassageCommentCount:   passage.PassageCommentCount,
-			PassageTime:           passage.PassageTime,
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -149,6 +199,33 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 			"error_message": "作者用户名为空",
 		})
 	}
+	pageSize := paramsMap["pageSize"]
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
+		})
+	}
 	passages, err := passageMapper.GetPassagesByPassageAuthorUserName(passageAuthorUserName)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -167,19 +244,42 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
-	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
-			ID:                    passage.ID,
-			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
-			PassageAuthorUserName: passage.PassageAuthorUserName,
-			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
-			PassageTag:            passage.PassageTag,
-			PassageBeLikedCount:   passage.PassageBeLikedCount,
-			PassageCommentCount:   passage.PassageCommentCount,
-			PassageTime:           passage.PassageTime,
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -207,6 +307,33 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 			"error_message": "作者昵称为空",
 		})
 	}
+	pageSize := paramsMap["pageSize"]
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
+		})
+	}
 	passages, err := passageMapper.GetPassagesByPassageAuthorNickName(passageAuthorNickName)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -225,19 +352,42 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
-	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
-			ID:                    passage.ID,
-			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
-			PassageAuthorUserName: passage.PassageAuthorUserName,
-			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
-			PassageTag:            passage.PassageTag,
-			PassageBeLikedCount:   passage.PassageBeLikedCount,
-			PassageCommentCount:   passage.PassageCommentCount,
-			PassageTime:           passage.PassageTime,
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -254,9 +404,36 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 	})
 }
 
-func GetPassagesByPassageAuthorIdService(c echo.Context) error {
+func GetPassagesByPassageAuthorIdService(paramsMap map[string]string, c echo.Context) error {
 	passageMapper := mappers.PassageMapper{}
 	passageAuthorIdUint := c.Get("userId").(uint)
+	pageSize := paramsMap["pageSize"]
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
+		})
+	}
 	passages, err := passageMapper.GetPassagesByPassageAuthorId(passageAuthorIdUint)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -275,19 +452,42 @@ func GetPassagesByPassageAuthorIdService(c echo.Context) error {
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
-	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
-			ID:                    passage.ID,
-			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
-			PassageAuthorUserName: passage.PassageAuthorUserName,
-			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
-			PassageTag:            passage.PassageTag,
-			PassageBeLikedCount:   passage.PassageBeLikedCount,
-			PassageCommentCount:   passage.PassageCommentCount,
-			PassageTime:           passage.PassageTime,
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -313,6 +513,33 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 		}).Error("文章标签为空")
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"error_message": "文章标签为空",
+		})
+	}
+	pageSize := paramsMap["pageSize"]
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
 		})
 	}
 	tagString := viper.GetString("passage.tag")
@@ -350,19 +577,42 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
-	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
-			ID:                    passage.ID,
-			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
-			PassageAuthorUserName: passage.PassageAuthorUserName,
-			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
-			PassageTag:            passage.PassageTag,
-			PassageBeLikedCount:   passage.PassageBeLikedCount,
-			PassageCommentCount:   passage.PassageCommentCount,
-			PassageTime:           passage.PassageTime,
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -379,7 +629,7 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 	})
 }
 
-// 获取最近的五个文章
+// GetLastPassagesService 获取最近的五个文章
 func GetLastPassagesService(c echo.Context) error {
 	passageMapper := mappers.PassageMapper{}
 	passages, err := passageMapper.GetAllPassages()
@@ -400,7 +650,7 @@ func GetLastPassagesService(c echo.Context) error {
 			"error_message": "文章不存在",
 		})
 	}
-	var passageInfos []infoModels.PassageDetail
+	var passageInfos []infoModels.PassageBrief
 	sort.Slice(passages, func(i, j int) bool {
 		return passages[i].PassageTime.After(passages[j].PassageTime)
 	})
@@ -408,17 +658,124 @@ func GetLastPassagesService(c echo.Context) error {
 		passages = passages[:5]
 	}
 	for _, passage := range passages {
-		passageInfo := infoModels.PassageDetail{
+		passageBrief := infoModels.PassageBrief{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
-			PassageContent:        passage.PassageContent,
 			PassageAuthorUserName: passage.PassageAuthorUserName,
 			PassageAuthorNickName: passage.PassageAuthorNickName,
-			PassageAuthorId:       passage.PassageAuthorId,
 			PassageTag:            passage.PassageTag,
 			PassageBeLikedCount:   passage.PassageBeLikedCount,
 			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
+		}
+		passageInfos = append(passageInfos, passageBrief)
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"passageInfos":    passageInfos,
+		"success_message": "获取文章成功",
+	})
+}
+
+func SearchPassagesService(paramsMap map[string]string, c echo.Context) error {
+	passageMapper := mappers.PassageMapper{}
+	searchTitle := paramsMap["searchTitle"]
+	// 一页显示的文章数量
+	pageSize := paramsMap["pageSize"]
+	if searchTitle == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "搜索标题为空",
+		}).Error("搜索标题为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "搜索标题为空",
+		})
+	}
+	if pageSize == "" {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小为空",
+		}).Error("页大小为空")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小为空",
+		})
+	}
+	pageSizeInt, err := strconv.Atoi(pageSize)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "解析页大小失败",
+		}).Error("解析页大小失败")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "解析页大小失败",
+		})
+	}
+	if pageSizeInt <= 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "页大小小于等于0",
+		}).Error("页大小小于等于0")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "页大小小于等于0",
+		})
+	}
+	passages, err := passageMapper.SearchPassagesByPassageTitle(searchTitle)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "搜索文章失败",
+		}).Error("搜索文章失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "搜索文章失败",
+		})
+	}
+	if len(passages) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "文章不存在",
+		}).Error("文章不存在")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "文章不存在",
+		})
+	}
+	var passageInfos [][]infoModels.PassageBrief
+	// 将文章信息存到passageInfo按页分组
+	for i := 0; i < len(passages); i += pageSizeInt {
+		var passageInfo []infoModels.PassageBrief
+		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
+			passage := passages[j]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
+		}
+		passageInfos = append(passageInfos, passageInfo)
+	}
+	// 剩下的文章信息不足一页的情况
+	if len(passages)%pageSizeInt != 0 {
+		var passageInfo []infoModels.PassageBrief
+		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
+			passage := passages[i]
+			passageBrief := infoModels.PassageBrief{
+				ID:                    passage.ID,
+				PassageTitle:          passage.PassageTitle,
+				PassageAuthorUserName: passage.PassageAuthorUserName,
+				PassageAuthorNickName: passage.PassageAuthorNickName,
+				PassageTag:            passage.PassageTag,
+				PassageBeLikedCount:   passage.PassageBeLikedCount,
+				PassageCommentCount:   passage.PassageCommentCount,
+				PassageTime:           passage.PassageTime,
+			}
+			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
@@ -431,6 +788,6 @@ func GetLastPassagesService(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
-		"success_message": "获取文章成功",
+		"success_message": "搜索文章成功",
 	})
 }

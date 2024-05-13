@@ -2,28 +2,23 @@ package services
 
 import (
 	"BBBingyan/internal/mappers"
-	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
-	"net/http"
-	"strconv"
-
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"net/http"
+	"strconv"
 )
 
-func SendCommentService(paramsMap map[string]string, c echo.Context) error {
+func DeletePassageService(paramaMap map[string]string, c echo.Context) error {
 	passageMapper := mappers.PassageMapper{}
-	commentMapper := mappers.CommentMapper{}
-	commentContent := paramsMap["commentContent"]
-	toPassageId := paramsMap["toPassageId"]
-	if commentContent == "" || toPassageId == "" {
-		utils.Log.WithField("error_message", "评论信息不完整").Error("评论信息不完整")
+	passageId := paramaMap["passageId"]
+	if passageId == "" {
+		utils.Log.WithField("error_message", "文章ID为空").Error("文章ID为空")
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error_message": "评论信息不完整",
+			"error_message": "文章ID为空",
 		})
 	}
-	userId := c.Get("userId").(uint)
-	toPassageIdUint64, err := strconv.ParseUint(toPassageId, 10, 64)
+	passageIdUint64, err := strconv.ParseUint(passageId, 10, 64)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
@@ -33,8 +28,8 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "文章ID转换失败",
 		})
 	}
-	toPassageIdUint := uint(toPassageIdUint64)
-	toPassage, err := passageMapper.GetPassagesByID(toPassageIdUint)
+	passageIdUint := uint(passageIdUint64)
+	toPassage, err := passageMapper.GetPassagesByID(passageIdUint)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
@@ -50,30 +45,21 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "文章不存在",
 		})
 	}
-	toPassage[0].PassageCommentCount++
-	err = passageMapper.UpdatePassage(toPassage[0])
-	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"error":         err,
-			"error_message": "更新文章评论数失败",
-		}).Error("更新文章评论数失败")
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "更新文章评论数失败",
+	userId := c.Get("userId").(uint)
+	if toPassage[0].PassageAuthorId != userId {
+		utils.Log.WithField("error_message", "无权删除文章").Error("无权删除文章")
+		return c.JSON(http.StatusForbidden, map[string]interface{}{
+			"error_message": "无权删除文章",
 		})
 	}
-	comment := &dataModels.Comment{
-		CommentContent: commentContent,
-		FromUserId:     userId,
-		ToPassageId:    toPassageIdUint,
-	}
-	err = commentMapper.AddNewComment(comment)
+	err = passageMapper.DeletePassage(toPassage[0])
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"error":         err,
-			"error_message": "评论失败",
-		}).Error("评论失败")
+			"error_message": "删除文章失败",
+		}).Error("删除文章失败")
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "评论失败",
+			"error_message": "删除文章失败",
 		})
 	}
 	csrfTool := utils.CSRFTool{}
@@ -84,6 +70,6 @@ func SendCommentService(paramsMap map[string]string, c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success_message": "评论成功",
+		"success_message": "删除文章成功",
 	})
 }

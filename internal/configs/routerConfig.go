@@ -39,6 +39,8 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/passages/tag", passageControllers.GetPassagesByPassageTagController)
 	// 获得最新文章
 	e.GET("/passages/last", passageControllers.GetLastPassagesController)
+	// 搜索文章
+	e.GET("/passages/search", passageControllers.SearchPassagesController)
 	// 根据Id获得评论
 	e.GET("/comment", commentControllers.GetCommentByIdController)
 	// 根据评论者Id获得评论
@@ -76,4 +78,6 @@ func PutRouterConfig(e *echo.Echo) {
 func DeleteRouterConfig(e *echo.Echo) {
 	// 取消关注
 	e.DELETE("/users/follow", useFollowControllers.UnFollowOtherController)
+	// 删除文章
+	e.DELETE("/passage", passageControllers.DeletePassageController)
 }
