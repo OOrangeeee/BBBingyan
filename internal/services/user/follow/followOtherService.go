@@ -12,6 +12,7 @@ import (
 )
 
 func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
+	followMapper := mappers.FollowMapper{}
 	followUserIdStr := paramsMap["followUserId"]
 	if followUserIdStr == "" {
 		utils.Log.WithFields(logrus.Fields{
@@ -33,6 +34,14 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 	}
 	followUserId := uint(followUserIdUint64)
 	userId := c.Get("userId").(uint)
+	if followMapper.IfFollowExist(userId, followUserId) {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "已关注该用户",
+		}).Error("已关注该用户")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "已关注该用户",
+		})
+	}
 	userMapper := mappers.UserMapper{}
 	followUser, err := userMapper.GetUsersByUserId(followUserId)
 	if err != nil {
@@ -48,6 +57,18 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 		utils.Log.WithField("error_message", "需要关注的用户不存在").Error("需要关注的用户不存在")
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"error_message": "需要关注的用户不存在",
+		})
+	}
+	followUserNow := followUser[0]
+	followUserNow.UserFansCount++
+	err = userMapper.UpdateUser(followUserNow)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新需要关注的用户信息失败",
+		}).Error("更新需要关注的用户信息失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新需要关注的用户信息失败",
 		})
 	}
 	user, err := userMapper.GetUsersByUserId(userId)
@@ -66,19 +87,21 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "当前用户不存在",
 		})
 	}
-
-	followMapper := mappers.FollowMapper{}
+	userNow := user[0]
+	userNow.UserFollowCount++
+	err = userMapper.UpdateUser(userNow)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新用户关注数失败",
+		}).Error("更新用户关注数失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新用户关注数失败",
+		})
+	}
 	newFollow := &dataModels.Follow{
 		FromUserId: userId,
 		ToUserId:   followUserId,
-	}
-	if followMapper.IfFollowExist(userId, followUserId) {
-		utils.Log.WithFields(logrus.Fields{
-			"error_message": "已关注该用户",
-		}).Error("已关注该用户")
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error_message": "已关注该用户",
-		})
 	}
 	err = followMapper.AddNewFollow(newFollow)
 	if err != nil {
@@ -88,6 +111,13 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 		}).Error("关注用户失败")
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "关注用户失败",
+		})
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{

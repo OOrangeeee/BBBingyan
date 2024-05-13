@@ -5,6 +5,7 @@ import (
 	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -107,6 +108,72 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 			noticeEmailSubject := viper.GetString("email.emailOfAt.subject")
 			noticeEmailContent := viper.GetString("email.emailOfAt.body")
 			noticeEmailContent = strings.Replace(noticeEmailContent, "{用户名}", userBeAtNow.UserNickName, -1)
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{提到内容}", passageTatle, -1)
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{passage-id}", strconv.Itoa(int(passage.ID)), -1)
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{联系电话}", viper.GetString("info.contactPhone"), -1)
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{官方网站}", viper.GetString("info.website"), -1)
+			mileTool := utils.MileTool{}
+			err = mileTool.SendMail([]string{userBeAtNow.UserEmail}, noticeEmailSubject, noticeEmailContent, viper.GetString("email.emailFromNickname"))
+			if err != nil {
+				utils.Log.WithFields(logrus.Fields{
+					"error":         err,
+					"error_message": "发送邮件失败",
+				}).Error("发送邮件失败")
+			}
+		}
+	}
+	userNow.UserPassageCount++
+	err = userMapper.UpdateUser(userNow)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新用户文章数失败",
+		}).Error("更新用户文章数失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新用户文章数失败",
+		})
+	}
+	followMapper := mappers.FollowMapper{}
+	follows, err := followMapper.GetFollowsByToUserId(userId)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取关注失败",
+		}).Error("获取关注失败")
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取关注失败",
+		})
+	}
+	for _, follow := range follows {
+		user, err := userMapper.GetUsersByUserId(follow.FromUserId)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "获取关注用户失败",
+			}).Error("获取关注用户失败")
+			continue
+		}
+		if len(user) == 0 {
+			utils.Log.WithField("error_message", "关注用户不存在").Error("关注用户不存在")
+			continue
+		}
+		userNow := user[0]
+		noticeEmailSubject := viper.GetString("email.emailOfFollow.subject")
+		noticeEmailContent := viper.GetString("email.emailOfFollow.body")
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{用户名}", userNow.UserNickName, -1)
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{文章标题}", passageTatle, -1)
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{passage-id}", strconv.Itoa(int(passage.ID)), -1)
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{联系电话}", viper.GetString("info.contactPhone"), -1)
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
+		noticeEmailContent = strings.Replace(noticeEmailContent, "{官方网站}", viper.GetString("info.website"), -1)
+		mileTool := utils.MileTool{}
+		err = mileTool.SendMail([]string{userNow.UserEmail}, noticeEmailSubject, noticeEmailContent, viper.GetString("email.emailFromNickname"))
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "发送邮件失败",
+			}).Error("发送邮件失败")
 		}
 	}
 	csrfTool := utils.CSRFTool{}

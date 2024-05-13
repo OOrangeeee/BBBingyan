@@ -16,6 +16,30 @@ email:
   emailUserName: "Jin0714ForProject@163.com"
   emailPassword: "ZYEAXFBDERNHYQNF"
   emailFromNickname: "BBBingyan团队"
+  emailOfFollow:
+    subject: "BBBingyan关注的人发布新文章了！(Follow Notification)"
+    body: |
+      <!DOCTYPE html>
+      <html lang="zh">
+      <head>
+          <meta charset="UTF-8">
+          <title>关注的人发布新文章通知</title>
+      </head>
+      <body>
+          <p>亲爱的 {用户名},</p>
+          <p>您好！</p>
+          <p>您关注的人发布了新文章。</p>
+          <p>文章标题：{文章标题}</p>
+          <p>请您点击下面的链接查看详情：</p>
+          <p>http://localhost:714/passage/{passage-id}</p>
+          <p>如果您有任何疑问或需要帮助，请随时回复此邮件或联系我们的客户支持团队。</p>
+          <p>祝好，</p>
+          <p>BBBingyan团队</p>
+          <p>联系电话：{联系电话}</p>
+          <p>电子邮箱：{电子邮件地址}</p>
+          <p>官方网站：<a href="{官方网站}">{官方网站}</a></p>
+      </body>
+      </html>
   emailOfAt:
     subject: "BBBingyan@提到通知(Mention Notification)"
     body: |
@@ -30,7 +54,8 @@ email:
           <p>您好！</p>
           <p>您在BBBingyan服务中被提到了。</p>
           <p>提到您的内容如下：</p>
-          <p>{提到内容}</p>
+          <p>http://localhost:714/passage/{passage-id}</p>
+          <p>请您点击上述链接查看详情。</p>
           <p>如果您有任何疑问或需要帮助，请随时回复此邮件或联系我们的客户支持团队。</p>
           <p>祝好，</p>
           <p>BBBingyan团队</p>

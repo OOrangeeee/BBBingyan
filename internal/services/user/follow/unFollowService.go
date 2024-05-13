@@ -61,6 +61,72 @@ func UnFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "取消关注失败",
 		})
 	}
+	userMapper := mappers.UserMapper{}
+	userNow, err := userMapper.GetUsersByUserId(userId)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取用户失败",
+		})
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取用户失败",
+		})
+	}
+	if len(userNow) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "用户不存在",
+		})
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "用户不存在",
+		})
+	}
+	userNow[0].UserFollowCount--
+	err = userMapper.UpdateUser(userNow[0])
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新用户关注数失败",
+		})
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新用户关注数失败",
+		})
+	}
+	followUser, err := userMapper.GetUsersByUserId(unFollowUserId)
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取关注用户失败",
+		})
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "获取关注用户失败",
+		})
+	}
+	if len(followUser) == 0 {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "关注用户不存在",
+		})
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "关注用户不存在",
+		})
+	}
+	followUser[0].UserFansCount--
+	err = userMapper.UpdateUser(followUser[0])
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "更新关注用户粉丝数失败",
+		})
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "更新关注用户粉丝数失败",
+		})
+	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "取消关注成功",
 	})

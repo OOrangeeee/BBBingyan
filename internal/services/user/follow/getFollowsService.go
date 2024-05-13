@@ -88,6 +88,13 @@ func GetFollowsByToUserIdService(paramsMap map[string]string, c echo.Context) er
 		}
 		ansFollows = append(ansFollows, newFollow)
 	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"follows":         ansFollows,
 		"success_message": "查询关注成功"})

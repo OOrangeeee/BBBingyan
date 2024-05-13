@@ -11,7 +11,7 @@ func GetUserInfoController(c echo.Context) error {
 }
 
 func GetUserInfoByIdController(c echo.Context) error {
-	userId := c.Param("userId")
+	userId := c.Param("user-id")
 	paramsMap := map[string]string{
 		"userId": userId,
 	}

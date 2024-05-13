@@ -70,6 +70,13 @@ func UserUpdatePassword(paramMap map[string]string, c echo.Context) error {
 			"error_message": "更新用户信息失败",
 		})
 	}
+	csrfTool := utils.CSRFTool{}
+	getCSRF := csrfTool.SetCSRFToken(c)
+	if !getCSRF {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error_message": "CSRF Token 获取失败",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"succeed_message": "修改密码成功",
 	})

@@ -14,7 +14,7 @@ func GetRouterConfig(e *echo.Echo) {
 	// 获取用户信息
 	e.GET("/users/account", useAccountControllers.GetUserInfoController)
 	// 根据用户Id获取用户信息
-	e.GET("/users/account/:userId", useAccountControllers.GetUserInfoByIdController)
+	e.GET("/users/account/:user-id", useAccountControllers.GetUserInfoByIdController)
 	// 根据用户名搜索用户
 	e.GET("/users/account/search/username", useAccountControllers.SearchUserByUserNameController)
 	// 根据用户昵称搜索用户
@@ -22,11 +22,11 @@ func GetRouterConfig(e *echo.Echo) {
 	// 获取CSRF Token
 	e.GET("/csrf-token", securityCSRFControllers.GetCSRFTokenController)
 	// 激活
-	e.GET("/users/account/activation/:activationCode", useAccountControllers.UserConfirmController)
+	e.GET("/users/account/activation/:activation-code", useAccountControllers.UserConfirmController)
 	// 获得文章标签
 	e.GET("/passage/tags", passageControllers.GetPassageTagsController)
 	// 根据文章Id获取文章
-	e.GET("/passage", passageControllers.GetPassageByIDController)
+	e.GET("/passage/:passage-id", passageControllers.GetPassageByIDController)
 	// 根据文章标题获取文章
 	e.GET("/passages/title", passageControllers.GetPassagesByPassageTitleController)
 	// 根据文章作者用户名获取文章
@@ -46,9 +46,9 @@ func GetRouterConfig(e *echo.Echo) {
 	// 根据文章Id获得评论
 	e.GET("/comment/to-passage", commentControllers.GetCommentsByToPassageIdController)
 	// 根据fromUserId获取关注列表
-	e.GET("/users/follow/from-user", useFollowControllers.GetFollowsByFromUserIdController)
+	e.GET("/users/follow/fromuser", useFollowControllers.GetFollowsByFromUserIdController)
 	// 根据toUserId获取关注列表
-	e.GET("/users/follow/to-user", useFollowControllers.GetFollowsByToUserIdController)
+	e.GET("/users/follow/touser", useFollowControllers.GetFollowsByToUserIdController)
 }
 
 func PostRouterConfig(e *echo.Echo) {

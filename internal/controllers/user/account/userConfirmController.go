@@ -7,6 +7,6 @@ import (
 )
 
 func UserConfirmController(c echo.Context) error {
-	activationCode := c.Param("activationCode")
+	activationCode := c.Param("activation-code")
 	return services.ConfirmUserService(activationCode, c)
 }
