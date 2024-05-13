@@ -19,7 +19,7 @@ func GetUserInfoByIdController(c echo.Context) error {
 }
 
 func SearchUserByUserNameController(c echo.Context) error {
-	userName := c.QueryParam("userName")
+	userName := c.QueryParam("user-name")
 	paramsMap := map[string]string{
 		"userName": userName,
 	}
@@ -27,7 +27,7 @@ func SearchUserByUserNameController(c echo.Context) error {
 }
 
 func SearchUserByUserNickNameController(c echo.Context) error {
-	userNickName := c.QueryParam("userNickName")
+	userNickName := c.QueryParam("user-nickname")
 	paramsMap := map[string]string{
 		"userNickName": userNickName,
 	}

@@ -5,6 +5,7 @@ import (
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
+	useFollowControllers "BBBingyan/internal/controllers/user/follow"
 
 	"github.com/labstack/echo/v4"
 )
@@ -57,6 +58,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/passage", passageControllers.SendPassageController)
 	// 发布评论
 	e.POST("/comment", commentControllers.SendCommentController)
+	// 关注
+	e.POST("/users/follow", useFollowControllers.FollowOtherController)
 }
 
 func PutRouterConfig(e *echo.Echo) {
