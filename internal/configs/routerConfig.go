@@ -74,4 +74,6 @@ func PutRouterConfig(e *echo.Echo) {
 }
 
 func DeleteRouterConfig(e *echo.Echo) {
+	// 取消关注
+	e.DELETE("/users/follow", useFollowControllers.UnFollowOtherController)
 }

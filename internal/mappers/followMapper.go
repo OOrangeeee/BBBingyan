@@ -46,3 +46,21 @@ func (fm *FollowMapper) GetFollowsByToUserId(toUserId uint) ([]*dataModels.Follo
 	result := utils.DB.Find(&follows, "to_user_id=?", toUserId)
 	return follows, result.Error
 }
+
+func (fm *FollowMapper) GetFollowsByFromUserIdAndToUserId(fromUserId, toUserId uint) ([]*dataModels.Follow, error) {
+	var follows []*dataModels.Follow
+	result := utils.DB.Find(&follows, "from_user_id=? AND to_user_id=?", fromUserId, toUserId)
+	return follows, result.Error
+}
+
+func (fm *FollowMapper) IfFollowExist(fromUserId, toUserId uint) bool {
+	follows, err := fm.GetFollowsByFromUserIdAndToUserId(fromUserId, toUserId)
+	if err != nil {
+		utils.Log.WithField("error_message", err).Error("获取关注失败")
+		return false
+	}
+	if len(follows) == 0 {
+		return false
+	}
+	return true
+}

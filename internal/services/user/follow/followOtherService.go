@@ -72,6 +72,14 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 		FromUserId: userId,
 		ToUserId:   followUserId,
 	}
+	if followMapper.IfFollowExist(userId, followUserId) {
+		utils.Log.WithFields(logrus.Fields{
+			"error_message": "已关注该用户",
+		}).Error("已关注该用户")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "已关注该用户",
+		})
+	}
 	err = followMapper.AddNewFollow(newFollow)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
