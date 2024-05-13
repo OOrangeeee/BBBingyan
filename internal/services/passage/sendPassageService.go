@@ -4,11 +4,12 @@ import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
+	"net/http"
+	"strings"
+
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"net/http"
-	"strings"
 )
 
 func SendPassageService(paramsMap map[string]string, c echo.Context) error {
@@ -85,6 +86,28 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "发布文章失败",
 		})
+	}
+	matchTool := utils.MatchTool{}
+	atUsers := matchTool.MatchAtInString(passageContent)
+	for _, atUser := range atUsers {
+		if userMapper.IfUserExist(atUser) {
+			userBeAt, err := userMapper.GetUsersByUserName(atUser)
+			if err != nil {
+				utils.Log.WithFields(logrus.Fields{
+					"error":         err,
+					"error_message": "获取被@用户失败",
+				}).Error("获取被@用户失败")
+				continue
+			}
+			if len(userBeAt) == 0 {
+				utils.Log.WithField("error_message", "被@用户不存在").Error("被@用户不存在")
+				continue
+			}
+			userBeAtNow := userBeAt[0]
+			noticeEmailSubject := viper.GetString("email.emailOfAt.subject")
+			noticeEmailContent := viper.GetString("email.emailOfAt.body")
+			noticeEmailContent = strings.Replace(noticeEmailContent, "{用户名}", userBeAtNow.UserNickName, -1)
+		}
 	}
 	csrfTool := utils.CSRFTool{}
 	getCSRF := csrfTool.SetCSRFToken(c)
