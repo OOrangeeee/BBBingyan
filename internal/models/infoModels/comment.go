@@ -1,7 +1,7 @@
 package infoModels
 
 type Comment struct {
-	CommentContent string  `josn:"commentContent"`
+	CommentContent string  `json:"commentContent"`
 	FromUser       User    `json:"fromUser"`
 	ToPassage      Passage `json:"toPassage"`
 }

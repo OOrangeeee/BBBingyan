@@ -55,7 +55,7 @@ func (uem *UserEmailMapper) IsUserRegisterEmailSendInTimeRange(email string) boo
 	result := utils.DB.First(&userEmail, "email=?", email)
 	if result.Error != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"error":         err.Error,
+			"error":         result.Error,
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}
@@ -81,7 +81,7 @@ func (uem *UserEmailMapper) IsUserLoginEmailSendInTimeRange(email string) bool {
 	result := utils.DB.First(&userEmail, "email=?", email)
 	if result.Error != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"error":         err.Error,
+			"error":         result.Error,
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}

@@ -45,6 +45,10 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/comment/from-user", commentControllers.GetCommentsByFromUserIdController)
 	// 根据文章Id获得评论
 	e.GET("/comment/to-passage", commentControllers.GetCommentsByToPassageIdController)
+	// 根据fromUserId获取关注列表
+	e.GET("/users/follow/from-user", useFollowControllers.GetFollowsByFromUserIdController)
+	// 根据toUserId获取关注列表
+	e.GET("/users/follow/to-user", useFollowControllers.GetFollowsByToUserIdController)
 }
 
 func PostRouterConfig(e *echo.Echo) {
