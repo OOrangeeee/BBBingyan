@@ -68,7 +68,7 @@ func (pm *PassageMapper) GetPassagesByPassageTag(passageTag string) ([]*dataMode
 func (pm *PassageMapper) SearchPassagesByPassageTitle(passageTitle string) ([]*dataModels.Passage, error) {
 	var passages []*dataModels.Passage
 	// 根据点赞数降序排序
-	result := utils.DB.Order("passage_like_count desc").Find(&passages, "passage_title like ?", "%"+passageTitle+"%")
+	result := utils.DB.Order("passage_be_liked_count desc").Find(&passages, "passage_title like ?", "%"+passageTitle+"%")
 	return passages, result.Error
 }
 

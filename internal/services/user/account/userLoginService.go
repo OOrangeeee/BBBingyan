@@ -3,11 +3,12 @@ package services
 import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/utils"
+	"net/http"
+	"strings"
+
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"net/http"
-	"strings"
 )
 
 func UserLoginService(params map[string]string, c echo.Context) error {
@@ -196,6 +197,9 @@ func UserLoginConfirmService(paramMap map[string]string, c echo.Context) error {
 	userEmailMapper := mappers.UserEmailMapper{}
 	if !userEmailMapper.IsUserLoginEmailSendInTimeRange(user.UserEmail) {
 		utils.Log.WithField("error_message", "验证码过期").Error("验证码过期")
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"error_message": "验证码过期",
+		})
 	}
 
 	jwtTool := utils.JwtTool{}

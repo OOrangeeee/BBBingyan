@@ -5,11 +5,13 @@ database:
   dataBaseUserName: "postgres"
   dataBasePassword: "bsbflsgxh.."
   # 127.0.0.1
-  dataBaseIp: "db"
+  dataBaseIp: "127.0.0.1"
   dataBasePort: "5432"
   dataBaseName: "bbbingyan"
 CSRF:
   cookieSecure: false
+  cookieHTTPOnly: true
+  cookieMaxAge: 86400
 email:
   emailHost: "smtp.163.com"
   emailPort: 465
@@ -31,7 +33,7 @@ email:
           <p>您关注的人发布了新文章。</p>
           <p>文章标题：{文章标题}</p>
           <p>请您点击下面的链接查看详情：</p>
-          <p>http://localhost:714/passage/{passage-id}</p>
+          <p><a href="文章链接">http://localhost:714/passage/{passage-id}</a></p>
           <p>如果您有任何疑问或需要帮助，请随时回复此邮件或联系我们的客户支持团队。</p>
           <p>祝好，</p>
           <p>BBBingyan团队</p>
@@ -54,7 +56,7 @@ email:
           <p>您好！</p>
           <p>您在BBBingyan服务中被提到了。</p>
           <p>提到您的内容如下：</p>
-          <p>http://localhost:714/passage/{passage-id}</p>
+          <p><a href="文章链接">http://localhost:714/passage/{passage-id}</a></p>
           <p>请您点击上述链接查看详情。</p>
           <p>如果您有任何疑问或需要帮助，请随时回复此邮件或联系我们的客户支持团队。</p>
           <p>祝好，</p>
@@ -65,7 +67,7 @@ email:
       </body>
       </html>
   emailOfLogin:
-    timeRange: 2
+    timeRange: 5
     subject: "BBBingyan登录通知(Login Notification)"
     body: |
       <!DOCTYPE html>

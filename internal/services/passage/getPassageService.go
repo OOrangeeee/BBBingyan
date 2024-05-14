@@ -156,25 +156,6 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
 	csrfTool := utils.CSRFTool{}
 	getCSRF := csrfTool.SetCSRFToken(c)
 	if !getCSRF {
@@ -250,25 +231,6 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 		var passageInfo []infoModels.PassageBrief
 		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
 			passage := passages[j]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
 			passageBrief := infoModels.PassageBrief{
 				ID:                    passage.ID,
 				PassageTitle:          passage.PassageTitle,
@@ -372,25 +334,6 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
 	csrfTool := utils.CSRFTool{}
 	getCSRF := csrfTool.SetCSRFToken(c)
 	if !getCSRF {
@@ -458,25 +401,6 @@ func GetPassagesByPassageAuthorIdService(paramsMap map[string]string, c echo.Con
 		var passageInfo []infoModels.PassageBrief
 		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
 			passage := passages[j]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
 			passageBrief := infoModels.PassageBrief{
 				ID:                    passage.ID,
 				PassageTitle:          passage.PassageTitle,
@@ -583,25 +507,6 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 		var passageInfo []infoModels.PassageBrief
 		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
 			passage := passages[j]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
 			passageBrief := infoModels.PassageBrief{
 				ID:                    passage.ID,
 				PassageTitle:          passage.PassageTitle,
@@ -746,25 +651,6 @@ func SearchPassagesService(paramsMap map[string]string, c echo.Context) error {
 		var passageInfo []infoModels.PassageBrief
 		for j := i; j < i+pageSizeInt && j < len(passages); j++ {
 			passage := passages[j]
-			passageBrief := infoModels.PassageBrief{
-				ID:                    passage.ID,
-				PassageTitle:          passage.PassageTitle,
-				PassageAuthorUserName: passage.PassageAuthorUserName,
-				PassageAuthorNickName: passage.PassageAuthorNickName,
-				PassageTag:            passage.PassageTag,
-				PassageBeLikedCount:   passage.PassageBeLikedCount,
-				PassageCommentCount:   passage.PassageCommentCount,
-				PassageTime:           passage.PassageTime,
-			}
-			passageInfo = append(passageInfo, passageBrief)
-		}
-		passageInfos = append(passageInfos, passageInfo)
-	}
-	// 剩下的文章信息不足一页的情况
-	if len(passages)%pageSizeInt != 0 {
-		var passageInfo []infoModels.PassageBrief
-		for i := len(passages) - len(passages)%pageSizeInt; i < len(passages); i++ {
-			passage := passages[i]
 			passageBrief := infoModels.PassageBrief{
 				ID:                    passage.ID,
 				PassageTitle:          passage.PassageTitle,
