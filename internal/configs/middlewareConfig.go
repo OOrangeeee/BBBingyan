@@ -4,6 +4,7 @@ import (
 	"BBBingyan/internal/utils"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -50,7 +51,13 @@ func InitMiddleware(e *echo.Echo) {
 	//JWT
 	e.Use(echojwt.WithConfig(echojwt.Config{
 		Skipper: func(c echo.Context) bool {
-			if (c.Path() == "/users/login/confirm" && c.Request().Method == "POST") || (c.Path() == "/csrf-token" && c.Request().Method == "GET") || (c.Path() == "/users/account/activation/:activationCode" && c.Request().Method == "GET") || (c.Path() == "/users/account" && c.Request().Method == "POST") || (c.Path() == "/users/login" && c.Request().Method == "POST") {
+			if (c.Path() == "/users/login/confirm" && c.Request().Method == "POST") ||
+				(c.Path() == "/csrf-token" && c.Request().Method == "GET") ||
+				(c.Path() == "/users/account" && c.Request().Method == "POST") ||
+				(c.Path() == "/users/login" && c.Request().Method == "POST") {
+				return true
+			}
+			if strings.HasPrefix(c.Request().URL.Path, "/users/account/activation") && c.Request().Method == "GET" {
 				return true
 			}
 			return false

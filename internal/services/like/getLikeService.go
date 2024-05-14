@@ -111,13 +111,6 @@ func GetUserLikesByUserIdService(paramsMap map[string]string, c echo.Context) er
 		}
 		ansLikes = append(ansLikes, likeInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"likes":           ansLikes,
 		"success_message": "获取用户点赞成功",

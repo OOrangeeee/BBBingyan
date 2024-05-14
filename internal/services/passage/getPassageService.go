@@ -67,13 +67,6 @@ func GetPassageByIDService(paramsMap map[string]string, c echo.Context) error {
 		PassageCommentCount:   passage.PassageCommentCount,
 		PassageTime:           passage.PassageTime,
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfo":     passageInfo,
 		"success_message": "获取文章成功",
@@ -155,13 +148,6 @@ func GetPassagesByPassageTitleService(paramsMap map[string]string, c echo.Contex
 			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -245,13 +231,6 @@ func GetPassagesByPassageAuthorUserNameService(paramsMap map[string]string, c ec
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
 		"success_message": "获取文章成功",
@@ -334,13 +313,6 @@ func GetPassagesByPassageAuthorNickNameService(paramsMap map[string]string, c ec
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
 		"success_message": "获取文章成功",
@@ -415,13 +387,6 @@ func GetPassagesByPassageAuthorIdService(paramsMap map[string]string, c echo.Con
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
 		"success_message": "获取文章成功",
@@ -466,7 +431,7 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 			"error_message": "页大小小于等于0",
 		})
 	}
-	tagString := viper.GetString("passage.tag")
+	tagString := viper.GetString("passage.tags")
 	tags := strings.Split(tagString, ",")
 	isTag := false
 	for _, tag := range tags {
@@ -521,13 +486,6 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 		}
 		passageInfos = append(passageInfos, passageInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
 		"success_message": "获取文章成功",
@@ -574,13 +532,6 @@ func GetLastPassagesService(c echo.Context) error {
 			PassageTime:           passage.PassageTime,
 		}
 		passageInfos = append(passageInfos, passageBrief)
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,
@@ -664,13 +615,6 @@ func SearchPassagesService(paramsMap map[string]string, c echo.Context) error {
 			passageInfo = append(passageInfo, passageBrief)
 		}
 		passageInfos = append(passageInfos, passageInfo)
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"passageInfos":    passageInfos,

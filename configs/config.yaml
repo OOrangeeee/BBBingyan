@@ -11,7 +11,7 @@ database:
 CSRF:
   cookieSecure: false
   cookieHTTPOnly: true
-  cookieMaxAge: 86400
+  cookieMaxAge: 7200
 email:
   emailHost: "smtp.163.com"
   emailPort: 465
@@ -125,6 +125,6 @@ info:
 jwt:
   jwtSecret: "w2qrS8mXMLbCCsw9HfMBwxyCZFVEYgyVzSFP6QJsXVNd0T9003lzKX8tDxNk25l9GO2wqiIYcWVsj5RXpQ3jHYxjH9riPkKWA4NBv1Kz2rFyIPMjL5brKZk9xGpiAhXQzBAwhJWMsEb7cE2Tfg4LZpMmtWFkb3uPAcC20V9IS5EUhnTclLSQa6pFjsQ9nS0XkM8YBI7O2VuEszmyLr7nT8N7WJwyYSYbJGYtbjZZfj5EQn38"
 passage:
-  tags: 求助,分享,讨论,建议,公告,恋爱,生活,学习,技术,创作,其他
+  tags: "求助,分享,讨论,建议,公告,恋爱,生活,学习,技术,创作,其他"
 admin:
   adminSecret: "9wyQKeF06StmYgrAmzTJlOvo21GneUHs"

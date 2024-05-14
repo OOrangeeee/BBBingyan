@@ -13,7 +13,6 @@ import (
 
 func GetUserInfoService(c echo.Context) error {
 	userMapper := mappers.UserMapper{}
-	csrfTool := utils.CSRFTool{}
 	userId := c.Get("userId").(uint)
 	isAdmin := c.Get("isAdmin").(bool)
 	users, err := userMapper.GetUsersByUserId(userId)
@@ -43,12 +42,6 @@ func GetUserInfoService(c echo.Context) error {
 		UserPassageCount: user.UserPassageCount,
 		UserLikeCount:    user.UserLikeCount,
 		UserIsAdmin:      isAdmin,
-	}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "获取用户信息成功",
@@ -98,13 +91,6 @@ func GetUserInfoByIdService(paramsMap map[string]string, c echo.Context) error {
 		UserLikeCount:    user.UserLikeCount,
 		UserIsAdmin:      user.UserIsAdmin,
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "获取用户信息成功",
 		"userInfo":        userInfo,
@@ -139,13 +125,6 @@ func SearchUserByUserNameService(paramsMap map[string]string, c echo.Context) er
 		}
 		userInfos = append(userInfos, userInfo)
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "搜索用户成功",
 		"userInfos":       userInfos,
@@ -179,13 +158,6 @@ func SearchUserByUserNicknameService(paramsMap map[string]string, c echo.Context
 			UserIsAdmin:      user.UserIsAdmin,
 		}
 		userInfos = append(userInfos, userInfo)
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "搜索用户成功",

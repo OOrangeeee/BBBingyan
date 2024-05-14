@@ -113,13 +113,6 @@ func UserFollowOtherService(paramsMap map[string]string, c echo.Context) error {
 			"error_message": "关注用户失败",
 		})
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "关注用户成功",
 	})

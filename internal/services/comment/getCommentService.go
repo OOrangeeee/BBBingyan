@@ -117,13 +117,6 @@ func GetCommentByIdService(paramsMap map[string]string, c echo.Context) error {
 		FromUser:       userInfo,
 		ToPassage:      passageInfo,
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "获取评论成功",
 		"commentInfo":     commentInfo,
@@ -237,13 +230,6 @@ func GetCommentsByFromUserIdService(paramsMap map[string]string, c echo.Context)
 			ToPassage:      passageInfo,
 		}
 		commentInfos = append(commentInfos, commentInfo)
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "获取评论成功",
@@ -360,13 +346,6 @@ func GetCommentsByToPassageIdService(paramsMap map[string]string, c echo.Context
 		}
 		commentInfos = append(commentInfos, commentInfo)
 
-	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "获取评论成功",

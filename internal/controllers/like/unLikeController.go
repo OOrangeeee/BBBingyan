@@ -8,7 +8,7 @@ import (
 
 func UnLikeController(c echo.Context) error {
 	paramsMap := make(map[string]string)
-	passageId := c.FormValue("passage-id")
+	passageId := c.QueryParam("passage-id")
 	paramsMap["passageId"] = passageId
 	return services.UnLikeService(paramsMap, c)
 }
