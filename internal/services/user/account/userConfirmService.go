@@ -45,13 +45,6 @@ func ConfirmUserService(ActivationCode string, c echo.Context) error {
 			"error_message": "数据库更新失败",
 		})
 	}
-	csrfTool := utils.CSRFTool{}
-	getCSRF := csrfTool.SetCSRFToken(c)
-	if !getCSRF {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "CSRF Token 获取失败",
-		})
-	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "用户激活成功",
 	})

@@ -1,0 +1,8 @@
+readme.md
+requirement.txt
+package-lock.json
+package.json
+node_modules/
+api/
+.idea/
+.git/

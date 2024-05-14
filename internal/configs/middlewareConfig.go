@@ -1,10 +1,10 @@
 package configs
 
 import (
-	"BBBingyan/internal/models/infoModels"
 	"BBBingyan/internal/utils"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
@@ -51,7 +51,13 @@ func InitMiddleware(e *echo.Echo) {
 	//JWT
 	e.Use(echojwt.WithConfig(echojwt.Config{
 		Skipper: func(c echo.Context) bool {
-			if (c.Path() == "/csrf-token" && c.Request().Method == "GET") || (c.Path() == "/users/account/activation/:activationCode" && c.Request().Method == "GET") || (c.Path() == "/users/account" && c.Request().Method == "POST") || (c.Path() == "/users/login" && c.Request().Method == "POST") {
+			if (c.Path() == "/users/login/confirm" && c.Request().Method == "POST") ||
+				(c.Path() == "/csrf-token" && c.Request().Method == "GET") ||
+				(c.Path() == "/users/account" && c.Request().Method == "POST") ||
+				(c.Path() == "/users/login" && c.Request().Method == "POST") {
+				return true
+			}
+			if strings.HasPrefix(c.Request().URL.Path, "/users/account/activation") && c.Request().Method == "GET" {
 				return true
 			}
 			return false
@@ -60,14 +66,30 @@ func InitMiddleware(e *echo.Echo) {
 		TokenLookup: "header:Authorization:Bearer ",
 		SuccessHandler: func(c echo.Context) {
 			user := c.Get("user").(*jwt.Token)
-			claims := user.Claims.(*infoModels.JwtCustomClaim)
+			claims, ok := user.Claims.(jwt.MapClaims)
+			if !ok {
+				c.Logger().Error("无法断言JWT claims为MapClaims类型")
+				return
+			}
+			userIdTmp, ok := claims["UserId"].(float64)
+			userId := uint(userIdTmp)
+			if !ok {
+				c.Logger().Error("用户ID claims类型断言错误")
+				return
+			}
+			isAdmin, ok := claims["IsAdmin"].(bool)
+			if !ok {
+				c.Logger().Error("管理员状态claims类型断言错误")
+				return
+			}
 			utils.Log.WithFields(logrus.Fields{
-				"userId":          claims.UserId,
-				"isAdmin":         claims.IsAdmin,
+				"userId":          userId,
+				"isAdmin":         isAdmin,
 				"success_message": "用户登录成功",
 			}).Info("用户登录成功")
-			c.Set("userId", claims.UserId)
-			c.Set("isAdmin", claims.IsAdmin)
+
+			c.Set("userId", userId)
+			c.Set("isAdmin", isAdmin)
 		},
 	}))
 }

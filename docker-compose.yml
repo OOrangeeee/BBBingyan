@@ -1,0 +1,15 @@
+services:
+  app:
+    image: bbbingyan:v2.0
+    ports:
+      - "714:714"
+    depends_on:
+      - db
+  db:
+    image: postgres:15.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bsbflsgxh..
+      POSTGRES_DB: bbbingyan
+    ports:
+      - "5432:5432"

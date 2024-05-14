@@ -73,6 +73,12 @@ func (um *UserMapper) GetUsersByUserActivationCode(userActivationCode string) ([
 	return users, result.Error
 }
 
+func (um *UserMapper) GetUsersByUserLoginToken(userLoginToken string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	result := utils.DB.Find(&users, "user_login_token=?", userLoginToken)
+	return users, result.Error
+}
+
 func (um *UserMapper) IfUserExist(userName string) bool {
 	var users []*dataModels.User
 	_ = utils.DB.Find(&users, "user_name=?", userName)
@@ -86,6 +92,24 @@ func (um *UserMapper) IfUserExist(userName string) bool {
 				"error":         err,
 				"error_message": "根据用户名删除未激活用户失败",
 			}).Error("根据用户名删除未激活用户失败")
+		}
+	}
+	return false
+}
+
+func (um *UserMapper) IfUserExistById(userId uint) bool {
+	var users []*dataModels.User
+	_ = utils.DB.Find(&users, "ID=?", userId)
+	if len(users) > 0 {
+		if users[0].UserIsActive {
+			return true
+		}
+		err := um.DeleteUnscopedUser(users[0])
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "根据ID删除未激活用户失败",
+			}).Error("根据ID删除未激活用户失败")
 		}
 	}
 	return false
@@ -107,4 +131,17 @@ func (um *UserMapper) IfUserEmailExist(userEmail string) bool {
 		}
 	}
 	return false
+}
+
+func (um *UserMapper) SearchUsersByUserName(userName string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	// 根据粉丝数降序排序
+	result := utils.DB.Order("user_fans_count desc").Find(&users, "user_name LIKE ?", "%"+userName+"%")
+	return users, result.Error
+}
+
+func (um *UserMapper) SearchUsersByUserNickName(userNickName string) ([]*dataModels.User, error) {
+	var users []*dataModels.User
+	result := utils.DB.Order("user_fans_count desc").Find(&users, "user_nick_name LIKE ?", "%"+userNickName+"%")
+	return users, result.Error
 }

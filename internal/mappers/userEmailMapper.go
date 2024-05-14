@@ -35,22 +35,57 @@ func (uem *UserEmailMapper) GetAllUserEmails() ([]*dataModels.UserEmail, error) 
 
 func (uem *UserEmailMapper) GetUserEmailsByUserEmail(userEmail string) ([]*dataModels.UserEmail, error) {
 	var userEmails []*dataModels.UserEmail
-	result := utils.DB.Find(&userEmails, "Email=?", userEmail)
+	result := utils.DB.Find(&userEmails, "email=?", userEmail)
 	return userEmails, result.Error
 }
 
-func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
+func (uem *UserEmailMapper) IsUserRegisterEmailSendInTimeRange(email string) bool {
 	timeRange := viper.GetInt("email.emailOfRegister.timeRange")
-	beforeTime := time.Now().Add(-time.Duration(timeRange) * time.Minute)
-	var userEmail *dataModels.UserEmail
-	err := utils.DB.First(&userEmail, "Email=?", email)
-	if err.Error != nil {
+	timeTool := utils.TimeTool{}
+	timeNow, err := timeTool.GetCurrentTime()
+	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"error":         err.Error,
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return false
+	}
+	beforeTime := timeNow.Add(-time.Duration(timeRange) * time.Minute)
+	var userEmail *dataModels.UserEmail
+	result := utils.DB.First(&userEmail, "email=?", email)
+	if result.Error != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         result.Error,
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}
-	if userEmail.EmailLastSent.After(beforeTime) {
+	if userEmail.EmailLastSentOfRegister.After(beforeTime) {
+		return true
+	}
+	return false
+}
+
+func (uem *UserEmailMapper) IsUserLoginEmailSendInTimeRange(email string) bool {
+	timeRange := viper.GetInt("email.emailOfLogin.timeRange")
+	timeTool := utils.TimeTool{}
+	timeNow, err := timeTool.GetCurrentTime()
+	if err != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "获取当前时间失败",
+		}).Error("获取当前时间失败")
+		return false
+	}
+	beforeTime := timeNow.Add(-time.Duration(timeRange) * time.Minute)
+	var userEmail *dataModels.UserEmail
+	result := utils.DB.First(&userEmail, "email=?", email)
+	if result.Error != nil {
+		utils.Log.WithFields(logrus.Fields{
+			"error":         result.Error,
+			"error_message": "查询用户邮箱失败",
+		}).Error("查询用户邮箱失败")
+	}
+	if userEmail.EmailLastSentOfLogin.After(beforeTime) {
 		return true
 	}
 	return false
@@ -58,10 +93,10 @@ func (uem *UserEmailMapper) IsUserEmailSendInTimeRange(email string) bool {
 
 func (uem *UserEmailMapper) IsExistUserEmail(email string) bool {
 	var userEmails []*dataModels.UserEmail
-	err := utils.DB.Find(&userEmails, "Email=?", email)
-	if err != nil {
+	result := utils.DB.Find(&userEmails, "email=?", email)
+	if result.Error != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"error":         err.Error,
+			"error":         result.Error,
 			"error_message": "查询用户邮箱失败",
 		}).Error("查询用户邮箱失败")
 	}

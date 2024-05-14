@@ -10,7 +10,12 @@ type User struct {
 	UserPassword       string
 	UserEmail          string `gorm:"unique"`
 	UserNickName       string
-	UserIsActive       bool
+	UserFollowCount    int
+	UserFansCount      int
+	UserPassageCount   int
+	UserLikeCount      int
+	UserIsActive       bool   `gorm:"default:false"`
 	UserActivationCode string `gorm:"unique"`
-	UserIsAdmin        bool
+	UserIsAdmin        bool   `gorm:"default:false"`
+	UserLoginToken     string `gorm:"default:'',unique"`
 }
