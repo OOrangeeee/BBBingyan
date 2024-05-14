@@ -71,3 +71,9 @@ func (pm *PassageMapper) SearchPassagesByPassageTitle(passageTitle string) ([]*d
 	result := utils.DB.Order("passage_like_count desc").Find(&passages, "passage_title like ?", "%"+passageTitle+"%")
 	return passages, result.Error
 }
+
+func (pm *PassageMapper) IfPassageExist(passageID uint) bool {
+	var passage dataModels.Passage
+	result := utils.DB.First(&passage, "ID=?", passageID)
+	return result.Error == nil
+}

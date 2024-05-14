@@ -38,12 +38,69 @@ func GetFollowsByFromUserIdService(paramsMap map[string]string, c echo.Context) 
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "查询关注失败"})
 	}
+	userMapper := mappers.UserMapper{}
 	var ansFollows []infoModels.Follow
 	for _, follow := range follows {
+		fromUsers, err := userMapper.GetUsersByUserId(follow.FromUserId)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "查询用户失败",
+			}).Error("查询用户失败")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"error_message": "查询用户失败"})
+		}
+		if len(fromUsers) == 0 {
+			utils.Log.WithFields(logrus.Fields{
+				"error_message": "用户不存在",
+			}).Error("用户不存在")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"error_message": "用户不存在"})
+		}
+		fromUser := fromUsers[0]
+		toUsers, err := userMapper.GetUsersByUserId(follow.ToUserId)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "查询用户失败",
+			}).Error("查询用户失败")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"error_message": "查询用户失败"})
+		}
+		if len(toUsers) == 0 {
+			utils.Log.WithFields(logrus.Fields{
+				"error_message": "用户不存在",
+			}).Error("用户不存在")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"error_message": "用户不存在"})
+		}
+		toUser := toUsers[0]
+		fromUserInfo := infoModels.User{
+			UserId:           fromUser.ID,
+			UserName:         fromUser.UserName,
+			UserEmail:        fromUser.UserEmail,
+			UserNickName:     fromUser.UserNickName,
+			UserFollowCount:  fromUser.UserFollowCount,
+			UserFansCount:    fromUser.UserFansCount,
+			UserPassageCount: fromUser.UserPassageCount,
+			UserLikeCount:    fromUser.UserLikeCount,
+			UserIsAdmin:      fromUser.UserIsAdmin,
+		}
+		toUserInfo := infoModels.User{
+			UserId:           toUser.ID,
+			UserName:         toUser.UserName,
+			UserEmail:        toUser.UserEmail,
+			UserNickName:     toUser.UserNickName,
+			UserFollowCount:  toUser.UserFollowCount,
+			UserFansCount:    toUser.UserFansCount,
+			UserPassageCount: toUser.UserPassageCount,
+			UserLikeCount:    toUser.UserLikeCount,
+			UserIsAdmin:      toUser.UserIsAdmin,
+		}
 		newFollow := infoModels.Follow{
-			ID:         follow.ID,
-			FromUserId: follow.FromUserId,
-			ToUserId:   follow.ToUserId,
+			ID:       follow.ID,
+			FromUser: fromUserInfo,
+			ToUser:   toUserInfo,
 		}
 		ansFollows = append(ansFollows, newFollow)
 	}
@@ -79,12 +136,69 @@ func GetFollowsByToUserIdService(paramsMap map[string]string, c echo.Context) er
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error_message": "查询关注失败"})
 	}
+	userMapper := mappers.UserMapper{}
 	var ansFollows []infoModels.Follow
 	for _, follow := range follows {
+		fromUsers, err := userMapper.GetUsersByUserId(follow.FromUserId)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "查询用户失败",
+			}).Error("查询用户失败")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"error_message": "查询用户失败"})
+		}
+		if len(fromUsers) == 0 {
+			utils.Log.WithFields(logrus.Fields{
+				"error_message": "用户不存在",
+			}).Error("用户不存在")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"error_message": "用户不存在"})
+		}
+		fromUser := fromUsers[0]
+		toUsers, err := userMapper.GetUsersByUserId(follow.ToUserId)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "查询用户失败",
+			}).Error("查询用户失败")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"error_message": "查询用户失败"})
+		}
+		if len(toUsers) == 0 {
+			utils.Log.WithFields(logrus.Fields{
+				"error_message": "用户不存在",
+			}).Error("用户不存在")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"error_message": "用户不存在"})
+		}
+		toUser := toUsers[0]
+		fromUserInfo := infoModels.User{
+			UserId:           fromUser.ID,
+			UserName:         fromUser.UserName,
+			UserEmail:        fromUser.UserEmail,
+			UserNickName:     fromUser.UserNickName,
+			UserFollowCount:  fromUser.UserFollowCount,
+			UserFansCount:    fromUser.UserFansCount,
+			UserPassageCount: fromUser.UserPassageCount,
+			UserLikeCount:    fromUser.UserLikeCount,
+			UserIsAdmin:      fromUser.UserIsAdmin,
+		}
+		toUserInfo := infoModels.User{
+			UserId:           toUser.ID,
+			UserName:         toUser.UserName,
+			UserEmail:        toUser.UserEmail,
+			UserNickName:     toUser.UserNickName,
+			UserFollowCount:  toUser.UserFollowCount,
+			UserFansCount:    toUser.UserFansCount,
+			UserPassageCount: toUser.UserPassageCount,
+			UserLikeCount:    toUser.UserLikeCount,
+			UserIsAdmin:      toUser.UserIsAdmin,
+		}
 		newFollow := infoModels.Follow{
-			ID:         follow.ID,
-			FromUserId: follow.FromUserId,
-			ToUserId:   follow.ToUserId,
+			ID:       follow.ID,
+			FromUser: fromUserInfo,
+			ToUser:   toUserInfo,
 		}
 		ansFollows = append(ansFollows, newFollow)
 	}

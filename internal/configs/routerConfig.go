@@ -2,6 +2,7 @@ package configs
 
 import (
 	commentControllers "BBBingyan/internal/controllers/comment"
+	likeControllers "BBBingyan/internal/controllers/like"
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
@@ -49,8 +50,10 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/comment/to-passage", commentControllers.GetCommentsByToPassageIdController)
 	// 根据fromUserId获取关注列表
 	e.GET("/users/follow/fromuser", useFollowControllers.GetFollowsByFromUserIdController)
-	// 根据toUserId获取关注列表
+	// 根据toUserId获取粉丝列表
 	e.GET("/users/follow/touser", useFollowControllers.GetFollowsByToUserIdController)
+	// 获取用户点赞列表
+	e.GET("/like/:from-user-id", likeControllers.GetLikesByFromUserIdController)
 }
 
 func PostRouterConfig(e *echo.Echo) {
@@ -66,6 +69,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/comment", commentControllers.SendCommentController)
 	// 关注
 	e.POST("/users/follow", useFollowControllers.FollowOtherController)
+	// 点赞
+	e.POST("/like", likeControllers.AddNewLikeController)
 }
 
 func PutRouterConfig(e *echo.Echo) {
@@ -80,4 +85,6 @@ func DeleteRouterConfig(e *echo.Echo) {
 	e.DELETE("/users/follow", useFollowControllers.UnFollowOtherController)
 	// 删除文章
 	e.DELETE("/passage", passageControllers.DeletePassageController)
+	// 取消点赞
+	e.DELETE("/like", likeControllers.UnLikeController)
 }

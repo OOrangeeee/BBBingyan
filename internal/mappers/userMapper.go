@@ -97,6 +97,24 @@ func (um *UserMapper) IfUserExist(userName string) bool {
 	return false
 }
 
+func (um *UserMapper) IfUserExistById(userId uint) bool {
+	var users []*dataModels.User
+	_ = utils.DB.Find(&users, "ID=?", userId)
+	if len(users) > 0 {
+		if users[0].UserIsActive {
+			return true
+		}
+		err := um.DeleteUnscopedUser(users[0])
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "根据ID删除未激活用户失败",
+			}).Error("根据ID删除未激活用户失败")
+		}
+	}
+	return false
+}
+
 func (um *UserMapper) IfUserEmailExist(userEmail string) bool {
 	var users []*dataModels.User
 	_ = utils.DB.Find(&users, "user_email=?", userEmail)

@@ -82,4 +82,12 @@ func InitDB() {
 			"error_message": "创建关注表失败",
 		}).Panic("创建关注表失败")
 	}
+	DB.Model(&dataModels.Like{})
+	err = DB.AutoMigrate(&dataModels.Like{})
+	if err != nil {
+		Log.WithFields(logrus.Fields{
+			"error":         err,
+			"error_message": "创建点赞表失败",
+		}).Panic("创建点赞表失败")
+	}
 }
