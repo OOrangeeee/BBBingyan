@@ -1,11 +1,12 @@
 server:
   port: 714
-  host: "http://localhost:714"
+  # http://localhost:714
+  host: "http://oorangeeee.com"
 database:
   dataBaseUserName: "postgres"
   dataBasePassword: "bsbflsgxh.."
   # 127.0.0.1
-  dataBaseIp: "127.0.0.1"
+  dataBaseIp: "db"
   dataBasePort: "5432"
   dataBaseName: "bbbingyan"
 CSRF:
@@ -119,9 +120,9 @@ email:
       </body>
       </html>
 info:
-  contactPhone: "123456789"
+  contactPhone: "13389791067"
   emailAddress: "Jin0714ForProject@163.com"
-  webSite: "http://localhost:714"
+  webSite: "http://oorangeeee.com"
 jwt:
   jwtSecret: "w2qrS8mXMLbCCsw9HfMBwxyCZFVEYgyVzSFP6QJsXVNd0T9003lzKX8tDxNk25l9GO2wqiIYcWVsj5RXpQ3jHYxjH9riPkKWA4NBv1Kz2rFyIPMjL5brKZk9xGpiAhXQzBAwhJWMsEb7cE2Tfg4LZpMmtWFkb3uPAcC20V9IS5EUhnTclLSQa6pFjsQ9nS0XkM8YBI7O2VuEszmyLr7nT8N7WJwyYSYbJGYtbjZZfj5EQn38"
 passage:

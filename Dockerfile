@@ -11,6 +11,9 @@ COPY go.sum .
 # 下载所有依赖项
 RUN go mod download
 
+# 安装时区数据
+RUN apk add --no-cache tzdata
+
 # 将源代码添加到工作目录
 COPY . .
 
@@ -25,7 +28,13 @@ FROM scratch
 # 从builder镜像中复制构建的二进制文件
 COPY --from=builder /app/main /main
 
+# 从builder镜像中复制时区数据
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+
 COPY --from=builder /app/configs/ /configs/
+
+# 设置时区环境变量
+ENV TZ=Asia/Shanghai
 
 # 暴露端口
 EXPOSE 714
