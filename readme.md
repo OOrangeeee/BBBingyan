@@ -1,5 +1,3 @@
 # BBBingyan
 
-BB死你
-
-// TODO：add readme
+一个开箱即用的论坛后端架构。
