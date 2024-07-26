@@ -1,3 +1,1 @@
-OpenAPI规范文件, OpenAPI specification file 
-
-懒得写了，又不需要对接
+OpenAPI规范文件, OpenAPI specification file
