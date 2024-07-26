@@ -2,7 +2,9 @@ package configs
 
 import (
 	commentControllers "BBBingyan/internal/controllers/comment"
+	emailControllers "BBBingyan/internal/controllers/email"
 	likeControllers "BBBingyan/internal/controllers/like"
+	wsControllers "BBBingyan/internal/controllers/message"
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
@@ -38,8 +40,8 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/passages/author/id", passageControllers.GetPassagesByPassageAuthorIdController)
 	// 根据文章标签获取文章
 	e.GET("/passages/tag", passageControllers.GetPassagesByPassageTagController)
-	// 获得最新文章
-	e.GET("/passages/last", passageControllers.GetLastPassagesController)
+	// 获得最热文章
+	e.GET("/passages/hottest", passageControllers.GetHottestPassagesController)
 	// 搜索文章
 	e.GET("/passages/search", passageControllers.SearchPassagesController)
 	// 根据Id获得评论
@@ -54,6 +56,8 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/users/follow/touser", useFollowControllers.GetFollowsByToUserIdController)
 	// 获取用户点赞列表
 	e.GET("/like/:from-user-id", likeControllers.GetLikesByFromUserIdController)
+	// ws
+	e.GET("/ws", wsControllers.GetWs)
 }
 
 func PostRouterConfig(e *echo.Echo) {
@@ -71,6 +75,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/follow", useFollowControllers.FollowOtherController)
 	// 点赞
 	e.POST("/like", likeControllers.AddNewLikeController)
+	// 发送邮件
+	e.POST("/email/users", emailControllers.AdminSendAllEmailsController)
 }
 
 func PutRouterConfig(e *echo.Echo) {

@@ -47,3 +47,9 @@ func (lm *LikeMapper) IfLikeExist(fromUserId, toPassageId uint) bool {
 	result := utils.DB.First(&like, "from_user_id=? and to_passage_id=?", fromUserId, toPassageId)
 	return result.Error == nil
 }
+
+func (lm *LikeMapper) GetAllLikes() ([]*dataModels.Like, error) {
+	var likes []*dataModels.Like
+	result := utils.DB.Find(&likes)
+	return likes, result.Error
+}

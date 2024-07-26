@@ -113,14 +113,14 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 			noticeEmailContent = strings.Replace(noticeEmailContent, "{联系电话}", viper.GetString("info.contactPhone"), -1)
 			noticeEmailContent = strings.Replace(noticeEmailContent, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
 			noticeEmailContent = strings.Replace(noticeEmailContent, "{官方网站}", viper.GetString("info.website"), -1)
-			mileTool := utils.MileTool{}
-			err = mileTool.SendMail([]string{userBeAtNow.UserEmail}, noticeEmailSubject, noticeEmailContent, viper.GetString("email.emailFromNickname"))
-			if err != nil {
-				utils.Log.WithFields(logrus.Fields{
-					"error":         err,
-					"error_message": "发送邮件失败",
-				}).Error("发送邮件失败")
-			}
+			go func(userBeAtNow *dataModels.User) {
+				utils.Sender.EmailQueue <- utils.EmailTask{
+					Recipient:    userBeAtNow.UserEmail,
+					Subject:      noticeEmailSubject,
+					Body:         noticeEmailContent,
+					FromNickName: viper.GetString("email.emailFromNickname"),
+				}
+			}(userBeAtNow)
 		}
 	}
 	userNow.UserPassageCount++
@@ -167,14 +167,14 @@ func SendPassageService(paramsMap map[string]string, c echo.Context) error {
 		noticeEmailContent = strings.Replace(noticeEmailContent, "{联系电话}", viper.GetString("info.contactPhone"), -1)
 		noticeEmailContent = strings.Replace(noticeEmailContent, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
 		noticeEmailContent = strings.Replace(noticeEmailContent, "{官方网站}", viper.GetString("info.website"), -1)
-		mileTool := utils.MileTool{}
-		err = mileTool.SendMail([]string{userNow.UserEmail}, noticeEmailSubject, noticeEmailContent, viper.GetString("email.emailFromNickname"))
-		if err != nil {
-			utils.Log.WithFields(logrus.Fields{
-				"error":         err,
-				"error_message": "发送邮件失败",
-			}).Error("发送邮件失败")
-		}
+		go func(userNow *dataModels.User) {
+			utils.Sender.EmailQueue <- utils.EmailTask{
+				Recipient:    userNow.UserEmail,
+				Subject:      noticeEmailSubject,
+				Body:         noticeEmailContent,
+				FromNickName: viper.GetString("email.emailFromNickname"),
+			}
+		}(userNow)
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success_message": "发布文章成功",

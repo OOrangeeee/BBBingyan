@@ -129,3 +129,6 @@ passage:
   tags: "求助,分享,讨论,建议,公告,恋爱,生活,学习,技术,创作,其他"
 admin:
   adminSecret: "9wyQKeF06StmYgrAmzTJlOvo21GneUHs"
+rabbitmq:
+  url: "amqp://rabbitmq:bsbflsgxh..@rabbitmq:5672/"
+

@@ -150,15 +150,14 @@ func RegisterUserService(paramMap map[string]string, c echo.Context) error {
 	emailBody = strings.Replace(emailBody, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
 	emailBody = strings.Replace(emailBody, "{官方网站}", viper.GetString("info.webSite"), -1)
 	err = mileTool.SendMail([]string{userEmail}, viper.GetString("email.emailOfRegister.subject"), emailBody, viper.GetString("email.emailFromNickname"))
-	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"error":         err,
-			"error_message": "邮件发送失败",
-		}).Error("邮件发送失败")
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "邮件发送失败",
-		})
-	}
+	go func() {
+		utils.Sender.EmailQueue <- utils.EmailTask{
+			Recipient:    userEmail,
+			Subject:      viper.GetString("email.emailOfRegister.subject"),
+			Body:         emailBody,
+			FromNickName: viper.GetString("email.emailFromNickname"),
+		}
+	}()
 	// 更新邮件发送时间
 	nowUserEmails, err := userEmailMapper.GetUserEmailsByUserEmail(userEmail)
 	if err != nil {

@@ -4,10 +4,12 @@ import (
 	"BBBingyan/internal/mappers"
 	"BBBingyan/internal/models/infoModels"
 	"BBBingyan/internal/utils"
+	"math"
 	"net/http"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -492,8 +494,8 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 	})
 }
 
-// GetLastPassagesService 获取最近的五个文章
-func GetLastPassagesService(c echo.Context) error {
+// GetHottestPassagesService 获取最火的文章
+func GetHottestPassagesService(c echo.Context) error {
 	passageMapper := mappers.PassageMapper{}
 	passages, err := passageMapper.GetAllPassages()
 	if err != nil {
@@ -505,22 +507,64 @@ func GetLastPassagesService(c echo.Context) error {
 			"error_message": "获取文章失败",
 		})
 	}
-	if len(passages) == 0 {
-		utils.Log.WithFields(logrus.Fields{
-			"error_message": "文章不存在",
-		}).Error("文章不存在")
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"error_message": "文章不存在",
-		})
+	// 计算每篇文章的得分
+	var scores []struct {
+		ID    uint
+		Score float64
 	}
-	var passageInfos []infoModels.PassageBrief
-	sort.Slice(passages, func(i, j int) bool {
-		return passages[i].PassageTime.After(passages[j].PassageTime)
-	})
-	if len(passages) > 5 {
-		passages = passages[:5]
-	}
+	epoch := time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
+	maxTime := time.Now().Sub(epoch).Seconds() // 获取最大时间差，用于归一化
 	for _, passage := range passages {
+		// 文章发布时间的秒数
+		duration := passage.PassageTime.Sub(epoch).Seconds()
+		// 归一化
+		normalizedTime := duration / maxTime
+		// 使用指数衰减公式来计算时间权重。公式中的-normalizedTime * 10表示随着时间的推移，权重以指数级别减小。
+		timeWeight := math.Exp(-normalizedTime * 10) // 使用指数衰减函数
+		// 结合文章的点赞数和评论数（评论数乘以2，表示评论通常比点赞更能表明用户的参与度和对内容的兴趣），并乘以时间权重。
+		scoreT := float64(passage.PassageBeLikedCount) + float64(passage.PassageCommentCount*2)*timeWeight
+		scores = append(scores, struct {
+			ID    uint
+			Score float64
+		}{passage.ID, scoreT})
+	}
+
+	// 根据得分排序
+	sort.Slice(scores, func(i, j int) bool {
+		return scores[i].Score > scores[j].Score
+	})
+
+	// 准备返回前十篇文章的ID
+	var topArticleIDs []uint
+	topArticleIDs = make([]uint, 11)
+	for _, score := range scores {
+		topArticleIDs = append(topArticleIDs, score.ID)
+		if len(topArticleIDs) >= 10 { // 如果只需要前10篇文章
+			break
+		}
+	}
+
+	var resPassage []infoModels.PassageBrief
+	for _, passageID := range topArticleIDs {
+		passageTemp, err := passageMapper.GetPassagesByID(passageID)
+		if err != nil {
+			utils.Log.WithFields(logrus.Fields{
+				"error":         err,
+				"error_message": "获取文章失败",
+			}).Error("获取文章失败")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"error_message": "获取文章失败",
+			})
+		}
+		if len(passageTemp) == 0 {
+			utils.Log.WithFields(logrus.Fields{
+				"error_message": "文章不存在",
+			}).Error("文章不存在")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"error_message": "文章不存在",
+			})
+		}
+		passage := passageTemp[0]
 		passageBrief := infoModels.PassageBrief{
 			ID:                    passage.ID,
 			PassageTitle:          passage.PassageTitle,
@@ -531,10 +575,11 @@ func GetLastPassagesService(c echo.Context) error {
 			PassageCommentCount:   passage.PassageCommentCount,
 			PassageTime:           passage.PassageTime,
 		}
-		passageInfos = append(passageInfos, passageBrief)
+		resPassage = append(resPassage, passageBrief)
 	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"passageInfos":    passageInfos,
+		"passageInfos":    resPassage,
 		"success_message": "获取文章成功",
 	})
 }
