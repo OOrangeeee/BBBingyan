@@ -494,8 +494,8 @@ func GetPassagesByPassageTagService(paramsMap map[string]string, c echo.Context)
 	})
 }
 
-// GetLastPassagesService 获取最火的文章
-func GetLastPassagesService(c echo.Context) error {
+// GetHottestPassagesService 获取最火的文章
+func GetHottestPassagesService(c echo.Context) error {
 	passageMapper := mappers.PassageMapper{}
 	passages, err := passageMapper.GetAllPassages()
 	if err != nil {

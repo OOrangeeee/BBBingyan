@@ -62,8 +62,8 @@ func GetPassagesByPassageTagController(c echo.Context) error {
 	return services.GetPassagesByPassageTagService(mapParams, c)
 }
 
-func GetLastPassagesController(c echo.Context) error {
-	return services.GetLastPassagesService(c)
+func GetHottestPassagesController(c echo.Context) error {
+	return services.GetHottestPassagesService(c)
 }
 
 func SearchPassagesController(c echo.Context) error {

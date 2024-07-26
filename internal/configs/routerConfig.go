@@ -40,8 +40,8 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/passages/author/id", passageControllers.GetPassagesByPassageAuthorIdController)
 	// 根据文章标签获取文章
 	e.GET("/passages/tag", passageControllers.GetPassagesByPassageTagController)
-	// 获得最新文章
-	e.GET("/passages/last", passageControllers.GetLastPassagesController)
+	// 获得最热文章
+	e.GET("/passages/hottest", passageControllers.GetHottestPassagesController)
 	// 搜索文章
 	e.GET("/passages/search", passageControllers.SearchPassagesController)
 	// 根据Id获得评论
