@@ -1,6 +1,6 @@
 services:
   app:
-    image: bbbingyan:v2.1.3
+    image: bbbingyan:latest //替换自己构建的镜像
     ports:
       - "714:714"
     depends_on:
@@ -9,7 +9,7 @@ services:
     image: postgres:15.6
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: bsbflsgxh..
+      POSTGRES_PASSWORD: postgres..
       POSTGRES_DB: bbbingyan
     ports:
       - "5432:5432"
@@ -17,7 +17,7 @@ services:
     image: rabbitmq:3-management
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq
-      RABBITMQ_DEFAULT_PASS: bsbflsgxh..
+      RABBITMQ_DEFAULT_PASS: rabbitmq..
     ports:
       - "5672:5672"
       - "15672:15672"

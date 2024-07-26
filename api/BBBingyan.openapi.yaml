@@ -1,0 +1,965 @@
+openapi: 3.0.1
+info:
+  title: BBBingyan
+  description: ''
+  version: 1.0.0
+tags: []
+paths:
+  /passage:
+    post:
+      summary: 发布文章
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: iZOBVEbGlJQOKICrXoRGtNhvelGuhuJX
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjp0cnVlLCJVc2VySWQiOjMsImV4cCI6MTcxNTM0NjY5OH0.0SRJZpXhTNTC96LaZ6gjzs8va_BDTSz2lbm5LTYtqzs
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                passage-title:
+                  example: 测试文章
+                  type: string
+                passage-content:
+                  example: 测试文章主体
+                  type: string
+                passage-tag:
+                  example: 求助
+                  type: string
+              required:
+                - passage-title
+                - passage-content
+                - passage-tag
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+    delete:
+      summary: 删除文章
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: passage-id
+          in: query
+          description: ''
+          required: false
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjI0NTB9.LOG2jup372F4AXYgGsVTvrmoFms2pVP-3Irf65aUtPQ
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /passage/tags:
+    get:
+      summary: 获取标签
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /csrf-token:
+    get:
+      summary: CSRF
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /users/login:
+    post:
+      summary: 登录
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user-password:
+                  example: bsbflsgxh..
+                  type: string
+                user-name:
+                  example: orange
+                  type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /users/login/confirm:
+    post:
+      summary: 登录验证
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                confirm-token:
+                  example: '358547'
+                  type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /users/account/{user-id}:
+    get:
+      summary: id 获取信息
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: user-id
+          in: path
+          description: ''
+          required: true
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: iZOBVEbGlJQOKICrXoRGtNhvelGuhuJX
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NDMxNTB9.yoigTrOWJi9Yjlswj8_f51-387bRBYb0VMEk96dH9sA
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /passages/last:
+    get:
+      summary: 获取文章
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: passage-title
+          in: query
+          description: ''
+          required: true
+          example: 测试文章
+          schema:
+            type: string
+        - name: page-size
+          in: query
+          description: ''
+          required: true
+          example: 2
+          schema:
+            type: integer
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passageInfo:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      passage_title:
+                        type: string
+                      passage_content:
+                        type: string
+                      passage_author_user_name:
+                        type: string
+                      passage_author_nick_name:
+                        type: string
+                      passage_tag:
+                        type: string
+                      PassageTime:
+                        type: string
+                    required:
+                      - id
+                      - passage_title
+                      - passage_content
+                      - passage_author_user_name
+                      - passage_author_nick_name
+                      - passage_tag
+                      - PassageTime
+                  success_message:
+                    type: string
+                required:
+                  - passageInfo
+                  - success_message
+      security: []
+  /comment:
+    post:
+      summary: 发送评论
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment-content:
+                  example: 柠檬头是笨蛋
+                  type: string
+                to-passage-id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_message:
+                    type: string
+                required:
+                  - success_message
+      security: []
+    get:
+      summary: 获得评论
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: comment-id
+          in: query
+          description: ''
+          required: false
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: eXgOgQBiMZHjXfdIeehFlqWMMgFCXSrJ
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTUyMjMxNzF9.cSTywYknXhobJsOZoz8zwAm_8WvpjXX_BlcccBKokrc
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /comment/from-user:
+    get:
+      summary: 根据用户id获得评论
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: from-user-id
+          in: query
+          description: ''
+          required: false
+          example: 1
+          schema:
+            type: integer
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: eXgOgQBiMZHjXfdIeehFlqWMMgFCXSrJ
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTUyMjMxNzF9.cSTywYknXhobJsOZoz8zwAm_8WvpjXX_BlcccBKokrc
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commentInfos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        CommentContent:
+                          type: string
+                        fromUser:
+                          type: object
+                          properties:
+                            userName:
+                              type: string
+                            userEmail:
+                              type: string
+                            userNickName:
+                              type: string
+                            userIsAdmin:
+                              type: boolean
+                          required:
+                            - userName
+                            - userEmail
+                            - userNickName
+                            - userIsAdmin
+                        toPassage:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            passage_title:
+                              type: string
+                            passage_content:
+                              type: string
+                            passage_author_user_name:
+                              type: string
+                            passage_author_nick_name:
+                              type: string
+                            passage_tag:
+                              type: string
+                            PassageTime:
+                              type: string
+                          required:
+                            - id
+                            - passage_title
+                            - passage_content
+                            - passage_author_user_name
+                            - passage_author_nick_name
+                            - passage_tag
+                            - PassageTime
+                  success_message:
+                    type: string
+                required:
+                  - commentInfos
+                  - success_message
+      security: []
+  /users/account/search/nickname:
+    get:
+      summary: 用户名搜索
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: user-nickname
+          in: query
+          description: ''
+          required: false
+          example: o
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /passages/search:
+    get:
+      summary: 搜索文章
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: passage-title
+          in: query
+          description: ''
+          required: false
+          example: 测试
+          schema:
+            type: string
+        - name: page-size
+          in: query
+          description: ''
+          required: false
+          example: '4'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /users/follow:
+    post:
+      summary: 关注
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                follow-user-id:
+                  example: '2'
+                  type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_message:
+                    type: string
+                required:
+                  - success_message
+      security: []
+    delete:
+      summary: 取消关注
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: un-follow-user-id
+          in: query
+          description: ''
+          required: false
+          example: '2'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /users/follow/fromuser:
+    get:
+      summary: 根据fromUserId获取关注列表
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: from-user-id
+          in: query
+          description: ''
+          required: false
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  follows:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        fromUser:
+                          type: object
+                          properties:
+                            userId:
+                              type: integer
+                            userName:
+                              type: string
+                            userEmail:
+                              type: string
+                            userNickName:
+                              type: string
+                            userFollowCount:
+                              type: integer
+                            userFansCount:
+                              type: integer
+                            userPassageCount:
+                              type: integer
+                            userLikeCount:
+                              type: integer
+                            userIsAdmin:
+                              type: boolean
+                          required:
+                            - userId
+                            - userName
+                            - userEmail
+                            - userNickName
+                            - userFollowCount
+                            - userFansCount
+                            - userPassageCount
+                            - userLikeCount
+                            - userIsAdmin
+                        toUser:
+                          type: object
+                          properties:
+                            userId:
+                              type: integer
+                            userName:
+                              type: string
+                            userEmail:
+                              type: string
+                            userNickName:
+                              type: string
+                            userFollowCount:
+                              type: integer
+                            userFansCount:
+                              type: integer
+                            userPassageCount:
+                              type: integer
+                            userLikeCount:
+                              type: integer
+                            userIsAdmin:
+                              type: boolean
+                          required:
+                            - userId
+                            - userName
+                            - userEmail
+                            - userNickName
+                            - userFollowCount
+                            - userFansCount
+                            - userPassageCount
+                            - userLikeCount
+                            - userIsAdmin
+                  success_message:
+                    type: string
+                required:
+                  - follows
+                  - success_message
+      security: []
+  /users/follow/touser:
+    get:
+      summary: 根据toUserId获取粉丝列表
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: to-user-id
+          in: query
+          description: ''
+          required: false
+          example: '2'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjAzODh9.XVa-4tnWTyHj2lTsX7dF31vrAvQfddouvD86uuyGMrI
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /like:
+    post:
+      summary: 点赞
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjI0NTB9.LOG2jup372F4AXYgGsVTvrmoFms2pVP-3Irf65aUtPQ
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                toPassageId:
+                  example: '2'
+                  type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success_message:
+                    type: string
+                required:
+                  - success_message
+      security: []
+    delete:
+      summary: 取消点赞
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: passage-id
+          in: query
+          description: ''
+          required: false
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjI0NTB9.LOG2jup372F4AXYgGsVTvrmoFms2pVP-3Irf65aUtPQ
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                passage-id:
+                  type: integer
+                  example: 1
+              required:
+                - passage-id
+      responses:
+        '400':
+          description: 请求有误
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_message:
+                    type: string
+                required:
+                  - error_message
+      security: []
+  /like/{from-user-id}:
+    get:
+      summary: 获取用户点赞列表
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: from-user-id
+          in: path
+          description: ''
+          required: true
+          example: '1'
+          schema:
+            type: string
+        - name: X-Csrf-Token
+          in: header
+          description: ''
+          required: false
+          example: xsXiUGrLHWnzrwcXvPwaNoXBEfMaLhur
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: ''
+          required: false
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJc0FkbWluIjpmYWxzZSwiVXNlcklkIjoxLCJleHAiOjE3MTU3NjI0NTB9.LOG2jup372F4AXYgGsVTvrmoFms2pVP-3Irf65aUtPQ
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+  /ws:
+    get:
+      summary: ws通讯
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security: []
+components:
+  schemas: {}
+  securitySchemes: {}
+servers: []
