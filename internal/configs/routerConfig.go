@@ -4,6 +4,7 @@ import (
 	commentControllers "BBBingyan/internal/controllers/comment"
 	emailControllers "BBBingyan/internal/controllers/email"
 	likeControllers "BBBingyan/internal/controllers/like"
+	wsControllers "BBBingyan/internal/controllers/message"
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
 	useAccountControllers "BBBingyan/internal/controllers/user/account"
@@ -55,6 +56,8 @@ func GetRouterConfig(e *echo.Echo) {
 	e.GET("/users/follow/touser", useFollowControllers.GetFollowsByToUserIdController)
 	// 获取用户点赞列表
 	e.GET("/like/:from-user-id", likeControllers.GetLikesByFromUserIdController)
+	// ws
+	e.GET("/ws", wsControllers.GetWs)
 }
 
 func PostRouterConfig(e *echo.Echo) {
