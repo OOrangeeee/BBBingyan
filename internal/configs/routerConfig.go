@@ -2,6 +2,7 @@ package configs
 
 import (
 	commentControllers "BBBingyan/internal/controllers/comment"
+	emailControllers "BBBingyan/internal/controllers/email"
 	likeControllers "BBBingyan/internal/controllers/like"
 	passageControllers "BBBingyan/internal/controllers/passage"
 	securityCSRFControllers "BBBingyan/internal/controllers/security/CSRF"
@@ -71,6 +72,8 @@ func PostRouterConfig(e *echo.Echo) {
 	e.POST("/users/follow", useFollowControllers.FollowOtherController)
 	// 点赞
 	e.POST("/like", likeControllers.AddNewLikeController)
+	// 发送邮件
+	e.POST("/email/users", emailControllers.AdminSendAllEmailsController)
 }
 
 func PutRouterConfig(e *echo.Echo) {

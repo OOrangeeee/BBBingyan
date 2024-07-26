@@ -2,6 +2,7 @@ package services
 
 import (
 	"BBBingyan/internal/mappers"
+	"BBBingyan/internal/models/dataModels"
 	"BBBingyan/internal/utils"
 	"net/http"
 	"strings"
@@ -86,7 +87,6 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 		})
 	}
 
-	mileTool := utils.MileTool{}
 	emailBody := viper.GetString("email.emailOfLogin.body")
 	emailBody = strings.Replace(emailBody, "{验证码}", loginToken, -1)
 	emailBody = strings.Replace(emailBody, "{用户名}", user.UserName, -1)
@@ -94,16 +94,14 @@ func UserLoginService(params map[string]string, c echo.Context) error {
 	emailBody = strings.Replace(emailBody, "{电子邮件地址}", viper.GetString("info.emailAddress"), -1)
 	emailBody = strings.Replace(emailBody, "{官方网站}", viper.GetString("info.webSite"), -1)
 	emailBody = strings.Replace(emailBody, "{登录时间}", timeNow.Format("2006-01-02 15:04:05"), -1)
-	err = mileTool.SendMail([]string{user.UserEmail}, viper.GetString("email.emailOfLogin.subject"), emailBody, viper.GetString("email.emailFromNickname"))
-	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"error":         err,
-			"error_message": "邮件发送失败",
-		}).Error("邮件发送失败")
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error_message": "邮件发送失败",
-		})
-	}
+	go func(user *dataModels.User) {
+		utils.Sender.EmailQueue <- utils.EmailTask{
+			Recipient:    user.UserEmail,
+			Subject:      viper.GetString("email.emailOfLogin.subject"),
+			Body:         emailBody,
+			FromNickName: viper.GetString("email.emailFromNickname"),
+		}
+	}(user)
 
 	nowUserEmails, err := userEmailMapper.GetUserEmailsByUserEmail(user.UserEmail)
 	if err != nil {
